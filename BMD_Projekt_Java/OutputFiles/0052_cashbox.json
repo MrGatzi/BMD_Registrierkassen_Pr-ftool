@@ -1,0 +1,32 @@
+{
+  "verificationId" : "RKSVDB",
+  "version" : 1,
+  "verificationState" : "FAIL",
+  "verificationResultDetailedMessage" : "Der vorliegende Beleg weist Fehler im maschinenlesbaren Code auf. Am besten, Sie  übermitteln zur Problembehandlung die nachfolgende Fehlerbeschreibung an Ihren Kassenhersteller.",
+  "verificationTimestamp" : "2016-09-08T09:34:27.726+02:00",
+  "verificationResultList" : [ {
+    "verificationId" : "RECEIPT_FULL",
+    "version" : 1,
+    "verificationName" : "Detailprüfung des maschinenlesbaren Codes",
+    "verificationTextualDescription" : "Dieses Modul und die dazugehörigen Submodule überprüfen die Gültigkeit des Belegs. Dabei werden sowohl Formatprüfungen, kryptographische Prüfungen (verschlüsselter Umsatzzähler, Signatur) als auch Prüfungen im Zusammenhang mit dem Status der Kasse bzw. der Signatur-/Siegelerstellungseinheit durchgeführt.",
+    "verificationState" : "FAIL",
+    "verificationTimestamp" : "2016-09-08T09:34:27.727+02:00",
+    "verificationResultList" : [ {
+      "verificationId" : "CRYPTO",
+      "version" : 1,
+      "verificationName" : "Kryptographische Prüfungen",
+      "verificationTextualDescription" : "In diesem Modul und den dazugehörigen Submodulen werden die kryptographische Validität des Umsatzzählers und des Signaturwerts überprüft. Für den Umsatzzähler kann eine detaillierte Prüfung nur beim Startbeleg durchgeführt werden, da nur in diesem Fall der entschlüsselte Wert bekannt ist (Umsatzzähler = 0).",
+      "verificationState" : "FAIL",
+      "verificationTimestamp" : "2016-09-08T09:34:27.729+02:00",
+      "verificationResultList" : [ {
+        "verificationId" : "CRYPTO_SIGNATURE",
+        "version" : 1,
+        "verificationName" : "Kryptographie: Überprüfung der kryptographischen Gültigkeit der Signatur",
+        "verificationTextualDescription" : "In diesem Modul wird die kryptographische Gültigkeit der Signatur mit Hilfe des öffentlichen Schlüssels überprüft.",
+        "verificationState" : "FAIL",
+        "verificationResultDetailedMessage" : "Die kryptographische Gültigkeit der Signatur ist nicht gegeben. Es scheint aber nicht der definierte Fall der ausgefallenen Sicherheitseinrichtung zuzutreffen.",
+        "verificationTimestamp" : "2016-09-08T09:34:27.729+02:00"
+      } ]
+    } ]
+  } ]
+}

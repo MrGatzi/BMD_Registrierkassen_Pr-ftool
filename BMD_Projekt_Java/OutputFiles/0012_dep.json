@@ -1,0 +1,107 @@
+{
+  "verificationId" : "RKSV_DEP_EXPORT",
+  "version" : 1,
+  "verificationName" : "RKSV-DEP-Export Prüfung",
+  "verificationTextualDescription" : "Es wird die Richtigkeit des exportierten RKSV-DEP überprüft: Abfolge der Belege, Entwicklung des verschlüsselten Umsatzzählers, Verkettung der Belege.",
+  "verificationState" : "PASS",
+  "verificationResultDetailedMessage" : "Die Belege im exportierten RKSV-DEP weisen keinen Fehler auf (Verkettung zu vorigem Beleg, Entwicklung des Umsatzzählers, Belegabfolge).",
+  "input" : {
+    "TURNOVER_SUM" : "42500",
+    "SYSTEM_TYPE_INITIAL" : "OPEN",
+    "RECEIPT_PREV" : "_R1-AT1_9901_9901201625_2016-09-30T15:13:44_55,00_45,00_0,00_0,00_0,00_E92qCkvVk5c=_1AAE02_eEdOEoDrUwk=_U2ljaGVyaGVpdHNlaW5yaWNodHVuZyBhdXNnZWZhbGxlbg==",
+    "CASHBOX_ID_INITIAL" : "9901",
+    "SIGNED_PENULT" : "false",
+    "DECRYPTED_TURNOVER_VALUE" : "42500",
+    "SIGNED_PREV" : "false",
+    "KNOWN_RECEIPT_IDS" : "_9901201614_9901201615_9901201616_9901201617_9901201618_9901201619_9901201620_9901201621_9901201622_9901201623_9901201624_9901201625",
+    "RECEIPT" : "_R1-AT1_9901_9901201626_2016-09-30T15:15:41_300,00_0,00_0,00_-300,00_0,00_GsvFdszwOm4=_1AAE02_rqxqFEZf/PE=_DD0IBMOzAEyqsV8MExuc7iaiYEFpf4YMF+yYAZ6tEoi9kL3ZqvDD3NKLptPw2g4uKaRWt8x9ePQ1PdE/nDpzbQ==",
+    "RK_SUITE_ID" : "R1",
+    "SYSTEM_TYPE" : "OPEN",
+    "TYPE_RECEIPT" : "STANDARD_BELEG",
+    "CASHBOX_ID" : "9901",
+    "TYPE_RECEIPT_PREV" : "STANDARD_BELEG"
+  },
+  "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00",
+  "verificationResultList" : [ {
+    "verificationId" : "DEP_STATE",
+    "version" : 1,
+    "verificationName" : "Abfolge der Belege",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft, ob die Abfolge der Belege im exportierten RKSV-DEP korrekt ist: Position des Startbeleges, Position des Sammelbeleges nach dem Ausfall der Signatureinrichtung.",
+    "verificationState" : "PASS",
+    "input" : {
+      "SIGNED_PENULT" : "false",
+      "SIGNED_PREV" : "false",
+      "TYPE_RECEIPT" : "STANDARD_BELEG",
+      "TYPE_RECEIPT_PREV" : "STANDARD_BELEG"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00"
+  }, {
+    "verificationId" : "DEP_UNIQUE_RECEIPT_ID",
+    "version" : 1,
+    "verificationName" : "Belegnummer - Mehrfachverwendung",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft ob die selbe Belegnummer mehrfach im RKSV-DEP-Export vorkommt.",
+    "verificationState" : "PASS",
+    "input" : {
+      "KNOWN_RECEIPT_IDS" : "_9901201614_9901201615_9901201616_9901201617_9901201618_9901201619_9901201620_9901201621_9901201622_9901201623_9901201624_9901201625",
+      "RECEIPT_IDENTIFIER" : "9901201626"
+    },
+    "output" : {
+      "KNOWN_RECEIPT_IDS" : "_9901201614_9901201615_9901201616_9901201617_9901201618_9901201619_9901201620_9901201621_9901201622_9901201623_9901201624_9901201625_9901201626"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00"
+  }, {
+    "verificationId" : "DEP_ONLY_ONE_CASHBOX_ID",
+    "version" : 1,
+    "verificationName" : "Eine Kasse pro RKSV-DEP Export",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft, ob der RKSV-DEP-Export, wie vorgeschrieben, nur eine Kassenidentifikationsnummer enthält.",
+    "verificationState" : "PASS",
+    "input" : {
+      "CASHBOX_ID_INITIAL" : "9901",
+      "CASHBOX_ID" : "9901"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00"
+  }, {
+    "verificationId" : "DEP_ONLY_ONE_SYTEM_TYPE",
+    "version" : 1,
+    "verificationName" : "Prüfung Vermischung der Systeme",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft ob Signatureinrichtungen aus dem geschlossenen Gesamtsystem (AT0) und Signatur/Siegelerstellungseinheiten vermischt werden. Es kann nur ein System-Typ im exportieren RKSV-DEP abgebildet werden.",
+    "verificationState" : "PASS",
+    "input" : {
+      "SYSTEM_TYPE_INITIAL" : "OPEN",
+      "SYSTEM_TYPE" : "OPEN"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00"
+  }, {
+    "verificationId" : "DEP_TURNOVER_COMPARE",
+    "version" : 1,
+    "verificationName" : "Entwicklung des Umsatzzählers",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft, ob die Entwicklung des verschlüsselten Umsatzzählers mit den Belegbeträgen übereinstimmt.",
+    "verificationState" : "PASS",
+    "input" : {
+      "DECRYPTED_TURNOVER_VALUE" : "42500",
+      "TURNOVER_SUM" : "42500",
+      "SUM_TAX_SET_ERMAESSIGT2" : "0,00",
+      "SUM_TAX_SET_ERMAESSIGT1" : "0,00",
+      "SUM_TAX_SET_NORMAL" : "300,00",
+      "TYPE_RECEIPT" : "STANDARD_BELEG",
+      "SUM_TAX_SET_NULL" : "-300,00",
+      "SUM_TAX_SET_BESONDERS" : "0,00"
+    },
+    "output" : {
+      "TURNOVER_SUM" : "42500"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.405+01:00"
+  }, {
+    "verificationId" : "DEP_CHAINING_VALUE",
+    "version" : 1,
+    "verificationName" : "Verkettung der maschinenlesbaren Codes im RKSV-DEP-Export",
+    "verificationTextualDescription" : "In diesem Modul wird überprüft, ob die Belege im exportierten RKSV-DEP korrekt verkettet sind.",
+    "verificationState" : "PASS",
+    "input" : {
+      "CHAINING_VALUE_PREVIOUS_RECEIPT" : "rqxqFEZf/PE=",
+      "RK_SUITE_ID" : "R1",
+      "CHAINING_INPUT" : "eyJhbGciOiJFUzI1NiJ9.X1IxLUFUMV85OTAxXzk5MDEyMDE2MjVfMjAxNi0wOS0zMFQxNToxMzo0NF81NSwwMF80NSwwMF8wLDAwXzAsMDBfMCwwMF9FOTJxQ2t2Vms1Yz1fMUFBRTAyX2VFZE9Fb0RyVXdrPQ.U2ljaGVyaGVpdHNlaW5yaWNodHVuZyBhdXNnZWZhbGxlbg"
+    },
+    "verificationTimestamp" : "2016-11-05T16:37:18.406+01:00"
+  } ]
+}

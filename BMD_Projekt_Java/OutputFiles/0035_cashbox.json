@@ -1,0 +1,32 @@
+{
+  "verificationId" : "RKSVDB",
+  "version" : 1,
+  "verificationState" : "FAIL",
+  "verificationResultDetailedMessage" : "Der vorliegende Beleg weist Fehler im maschinenlesbaren Code auf. Am besten, Sie  übermitteln zur Problembehandlung die nachfolgende Fehlerbeschreibung an Ihren Kassenhersteller.",
+  "verificationTimestamp" : "2016-09-08T09:34:27.630+02:00",
+  "verificationResultList" : [ {
+    "verificationId" : "RECEIPT_FULL",
+    "version" : 1,
+    "verificationName" : "Detailprüfung des maschinenlesbaren Codes",
+    "verificationTextualDescription" : "Dieses Modul und die dazugehörigen Submodule überprüfen die Gültigkeit des Belegs. Dabei werden sowohl Formatprüfungen, kryptographische Prüfungen (verschlüsselter Umsatzzähler, Signatur) als auch Prüfungen im Zusammenhang mit dem Status der Kasse bzw. der Signatur-/Siegelerstellungseinheit durchgeführt.",
+    "verificationState" : "FAIL",
+    "verificationTimestamp" : "2016-09-08T09:34:27.631+02:00",
+    "verificationResultList" : [ {
+      "verificationId" : "STATE_CONSOLIDATED",
+      "version" : 1,
+      "verificationName" : "Statusprüfung der Kasse und Signatur-/Siegelerstellungseinheit",
+      "verificationTextualDescription" : "In diesem Modul und den dazugehörigen Submodulen werden die Zustände der Kasse und der verwendeten Signatur-/Siegelerstellungseinheit und die Ergebnisse der zuvor durchgeführten Prüfungen (vor allem der Belegtyp) ausgewertet. Handelt es sich um einen Startbeleg, wird überprüft ob eine Inbetriebnahme der Kasse möglich ist.",
+      "verificationState" : "FAIL",
+      "verificationTimestamp" : "2016-09-08T09:34:27.634+02:00",
+      "verificationResultList" : [ {
+        "verificationId" : "STATE_SIGDEVICE",
+        "version" : 1,
+        "verificationName" : "Statusprüfung der Signatur-/Siegelerstellungseinheit",
+        "verificationTextualDescription" : "Es wird der Status der Signatur-/Siegelerstellungseinheit zum Belegerstellungszeitpunkt und zum Prüfzeitpunkt ausgewertet. Die extrahierten Informationen werden im Zusammenhang mit weiteren Beleginformationen betrachtet.",
+        "verificationState" : "FAIL",
+        "verificationResultDetailedMessage" : "Dieser Nullbeleg wurde nicht kryptographisch signiert. Ein Nullbeleg muss über eine gültige Signatur verfügen.",
+        "verificationTimestamp" : "2016-09-08T09:34:27.634+02:00"
+      } ]
+    } ]
+  } ]
+}
