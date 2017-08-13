@@ -15,14 +15,13 @@ import javax.swing.text.StyleConstants;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.awt.image.BufferedImage;
 import java.nio.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,20 +29,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -59,7 +52,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.sun.pdfview.PDFFile;
 
-public class MainFrame extends JFrame {
+public class __MainFrame extends JFrame {
 	/**
 	 * 
 	 */
@@ -121,15 +114,18 @@ public class MainFrame extends JFrame {
 	String defaultFolerOpen ="user.home";  // Default verzeichniss zum speichern der Demokassen und zum öffnen der anderen FileChoosser
 	int UIDFlag=1; // Flag die speichert wie viele UID-Kästchen es gibt.
 	public Component frame;
+	long timer=0;
+	long startimer=0;
+	int countimer=0;
+	static __Coding code= new __Coding();
+	static __ReadFile read= new __ReadFile();
 
-	public MainFrame() {
+	public __MainFrame() {
 		try {
-			// setDefaultCloseOperation(EXIT_ON_CLOSE);
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-
 			SwingUtilities.updateComponentTreeUI(this);
 			FrameInit();
-
 			this.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					SaveDropdowns();
@@ -326,6 +322,14 @@ public class MainFrame extends JFrame {
 		// new JPanel for FilterBox+QRCode Button
 		JPanel QRboxs = new JPanel(new FlowLayout());
 
+		//Button um einen neuen DIalog zu erstellen der KAssenID zu Verkettungswert ändert
+		JButton CalcChain = new JButton();
+		CalcChain.setText("KassenID Converter");
+		CalcChain.setPreferredSize(new Dimension(130, 30));
+		ConvertIdToChain ChainConverter = new ConvertIdToChain();
+		CalcChain.addActionListener(ChainConverter);
+		QRboxs.add(CalcChain);
+		
 		// Button zum geerieren von einem CryptoFile
 		JButton GenACrypto = new JButton();
 		GenACrypto.setText("Crypto erstellen");
@@ -397,15 +401,12 @@ public class MainFrame extends JFrame {
 	// Listener auf den Button "ShowCRYPTO".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
 	private class ShowCRYPTO_selected implements ActionListener {
-
-		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
 			        File myFile = new File(selectedFolder_show_5.getSelectedItem().toString());
 			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
-			        // no application registered for PDFs
 			    }
 			}
 		}
@@ -413,8 +414,6 @@ public class MainFrame extends JFrame {
 	// Listener auf den Button "ShowQR".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
 	private class ShowQR_selected implements ActionListener {
-
-		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
@@ -429,8 +428,6 @@ public class MainFrame extends JFrame {
 	// Listener auf den Button "ShowDEP".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
 	private class ShowDEP_selected implements ActionListener {
-
-		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
@@ -558,7 +555,7 @@ public class MainFrame extends JFrame {
 									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "  \r\n");
 								} else {
 									try {
-										i1 = CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
+										i1 = code.CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
 									} catch (IOException e1) {
 										// TODO Auto-generated catch block
 										e1.printStackTrace();
@@ -591,138 +588,19 @@ public class MainFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			//System.out.println("yay");
-			try {
-				int FlagControll=0;
-				Outputarea.setText("DEP_FILE:");
-				String DEP = Readtxt(selectedFolder_show_2.getSelectedItem().toString());
-				String FlagSignatur="";
-				int indexPrüf=0;
-				int forcounter=0;
-				indexPrüf = DEP.indexOf("Belege-kompakt");
-				while (indexPrüf>-1) {
-					DEP=DEP.substring(indexPrüf, DEP.length());
-					String DEP2 = DEP.substring(DEP.indexOf("["), DEP.indexOf("]"));
-					indexPrüf = DEP.indexOf("Belege-kompakt", DEP.indexOf("Belege-kompakt") + 1);
-					String[] parts =DEP2.split(",");
-					//forcounter=0;
-					for (int i = 0; i < parts.length; i++) {
-
-						parts[i] = parts[i].substring(parts[i].indexOf("\"") + 1);
-						parts[i] = parts[i].substring(0,parts[i].indexOf("\""));
-						String[] parts3 = parts[i].split("[.]");
-						byte[] parts4 = null;
-						if (parts3.length > 1) {
-							parts4 = base64Decode(parts3[1], false);
-						} else {
-							parts4 = "NOT VALID".getBytes();
-						}
-						String PartString = new String(parts4, "UTF-8");
-						String[] parts2 = PartString.split("_");
-						int Flag2 = 0;
-						String KassenID = "";
-						String BelegID = "";
-						while (Flag2 < parts2.length) {
-							if (Flag2 == 2) {
-								KassenID = parts2[Flag2];
-							}
-							if (Flag2 == 3) {
-								BelegID = parts2[Flag2];
-							}
-							if (Flag2 == 10) {
-								Outputarea.append(
-										"Stand-Umsatz-Zaehler-AES256-ICM_Verschlüsselt: " + parts2[Flag2] + "   \r\n");
-								// Abfrage ob STO oder TRA (Trainings beleg oder
-								// Storno Beleg)
-								// oder Umsatz wert
-								if (parts2[Flag2].equals("U1RP")) {
-									String d = "STO";
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "   \r\n");
-								} else if (parts2[Flag2].equals("VFJB")) {
-									String d = "TRA";
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "  \r\n");
-								} else {
-									long i1 = CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
-									double d = (double) i1;
-									d = d / 100;
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "€   \r\n");
-								}
-							} else {
-								Outputarea.append(QR_Code_Titels[Flag2] + " " + parts2[Flag2] + "\r\n");
-								Outputarea.update(Outputarea.getGraphics());
-							}
-							Flag2++;
-							Outputarea.setRows(Outputarea.getRows() + 2);
-						}
-						if (forcounter == 0) {
-							MessageDigest md = MessageDigest.getInstance("sha-256");
-
-							// calculate hash value
-							md.update(KassenID.getBytes());
-							byte[] digest = md.digest();
-
-							// extract number of bytes (N, defined in RKsuite)
-							// from
-							// hash value
-							int bytesToExtract = 8;
-							byte[] conDigest = new byte[bytesToExtract];
-							System.arraycopy(digest, 0, conDigest, 0, bytesToExtract);
-
-							// encode value as BASE64 String ==> chainValue
-							byte[] Sig_Vor_Beleg = Base64.encodeBase64(conDigest, false);
-							String Sig_Vor_Beleg_String = new String(Sig_Vor_Beleg, "UTF-8");
-							Outputarea.append("Sig_Voriger_Beleg_Calculated: " + Sig_Vor_Beleg_String + "\r\n");
-							if (Sig_Vor_Beleg_String.equals(parts2[Flag2 - 1])) {
-								FlagControll++;
-							}
-						}
-						if (forcounter > 0) {
-							MessageDigest md = MessageDigest.getInstance("sha-256");
-
-							// calculate hash value
-							md.update(FlagSignatur.getBytes());
-							byte[] digest = md.digest();
-
-							// extract number of bytes (N, defined in RKsuite)
-							// from
-							// hash value
-							int bytesToExtract = 8;
-							byte[] conDigest = new byte[bytesToExtract];
-							System.arraycopy(digest, 0, conDigest, 0, bytesToExtract);
-
-							// encode value as BASE64 String ==> chainValue
-							byte[] Sig_Vor_Beleg = Base64.encodeBase64(conDigest, false);
-							String Sig_Vor_Beleg_String = new String(Sig_Vor_Beleg, "UTF-8");
-							Outputarea.append("Sig_Voriger_Beleg_Calculated: " + Sig_Vor_Beleg_String + "\r\n");
-							if (Sig_Vor_Beleg_String.equals(parts2[Flag2 - 1])) {
-								FlagControll++;
-							}
-						}
-						FlagSignatur = parts[i];
-						if (!parts4.toString().equals("NOT VALID")) {
-							String parts5 = base64UrlDecode(parts3[2]);
-							byte[] encodedBytes = Base64.encodeBase64(parts5.getBytes());
-							String PartString1 = new String(encodedBytes, "UTF-8");
-							Outputarea.append("Signatur: " + PartString1 + "\r\n");
-						}
-
-						forcounter++;
-						Outputarea.setRows(Outputarea.getRows() + 2);
-						Outputarea.update(Outputarea.getGraphics());
-					}
-				}
-				Outputarea.append("Listen Elemente: "+forcounter+" , davon richtig verkettet:"+FlagControll+" \r\n");
-				Outputarea.update(Outputarea.getGraphics());
-
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Outputarea.setCaretPosition(0);
+			//showDepFileinConsole
+			Outputarea.setText("Show DEP-File: ");
+			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+			setCursor(hourglassCursor);
+			
+			__ShowDepFileInConsole DepFunction = new __ShowDepFileInConsole();
+			String outputDepFile =DepFunction.show(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
+			int count = StringUtils.countMatches(outputDepFile, "\r\n"); // commons-lang3-3.6.jar in /lib
+			Outputarea.setRows(count+10);
+			Outputarea.setText(outputDepFile);
+			
+			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			setCursor(DefCursor);
 		}
 	}
 	
@@ -737,64 +615,18 @@ public class MainFrame extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			Outputarea.setRows(10);
-			Outputarea.setText("QR Files : ");
-			try {
-				String Input = Readtxt(selectedFolder_show_4.getSelectedItem().toString());
-
-				Input = Input.substring(1);
-				Input = Input.substring(0, Input.length() - 1);
-				String[] parts = Input.split("\"");
-				int Flag = 0;
-				while (Flag < parts.length) {
-					if (parts[Flag].length() > 5) {
-						String[] parts2 = parts[Flag].split("_");
-						int Flag2 = 0;
-						String KassenID = "";
-						String BelegID = "";
-						while (Flag2 < parts2.length) {
-							if (Flag2 == 2) {
-								KassenID = parts2[Flag2];
-							}
-							if (Flag2 == 3) {
-								BelegID = parts2[Flag2];
-							}
-							if (Flag2 == 10) {
-								Outputarea.append("Stand-Umsatz-Zaehler-AES256-ICM_Verschlüsselt: "+ parts2[Flag2] + "   \r\n");
-								// Abfrage ob STO oder TRA (Trainings beleg oder
-								// Storno Beleg)
-								// oder Umsatz wert
-								if (parts2[Flag2].equals("U1RP")) {
-									String d = "STO";
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "   \r\n");
-								} else if (parts2[Flag2].equals("VFJB")) {
-									String d = "TRA";
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "  \r\n");
-								} else {
-									long i1 = CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
-									double d = (double) i1;
-									d = d / 100;
-									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "€   \r\n");
-								}
-							}else {
-								Outputarea.append(QR_Code_Titels[Flag2] + " " + parts2[Flag2] + "\r\n");
-								
-								
-								Outputarea.update(Outputarea.getGraphics());
-							}
-							Flag2++;
-							Outputarea.setRows(Outputarea.getRows()+1);
-						}
-
-						// QR_Code_Titels
-					}
-					Flag++;
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Outputarea.setCaretPosition(0);
+			Outputarea.setText("Show QR-File: ");
+			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+			setCursor(hourglassCursor);
+			
+			__ShowQrFileInConsole QrFunction = new __ShowQrFileInConsole();
+			String outputQrFile =QrFunction.show(selectedFolder_show_4.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
+			int count = StringUtils.countMatches(outputQrFile, "\r\n"); // commons-lang3-3.6.jar in /lib
+			Outputarea.setRows(count+10);
+			Outputarea.setText(outputQrFile);
+			
+			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			setCursor(DefCursor);
 		}
 	}
 	// Listener die das zuletzt ausgewählte PDF anzeigt wenn ein PDf reader am PC installiert ist
@@ -1101,15 +933,6 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	// Listerner der einen File Dialog öffnen soll wo dann ein QR PFD ausgewählt
 	// werden kann
 	// Danach wird das PDF in eni JPG umgewandelt und anschließend wird der
@@ -1212,7 +1035,7 @@ public class MainFrame extends JFrame {
 								}
 								if (whileLoop == 10) {	
 									long i1=0;
-									i1=CalcNewValue(KassenID,BelegID,retval,selectedFolder_show_5.getSelectedItem().toString());
+									i1=code.CalcNewValue(KassenID,BelegID,retval,selectedFolder_show_5.getSelectedItem().toString());
 									// Abfrage ob STO oder TRA (Trainings beleg oder Storno Beleg)
 									// oder Umsatz wert
 									if(i1==98989898){
@@ -2038,137 +1861,13 @@ public class MainFrame extends JFrame {
 		}
 		return null;
 	}
-	// Funktion zum Entschlüsseln des Umsatzzählers
-	// Aus dem Github verzeichniss : https://github.com/a-sit-plus/at-registrierkassen-mustercode/blob/master/regkassen-core/src/main/java/at/asitplus/regkassen/core/base/util/CryptoUtil.java
-	// den TurnOverCounter checken ob er TRO oder STO ist und wenn dann nicht in die If rein ! 
-	public static long decryptTurnOverCounter(String encryptedTurnOverCounterBase64, String hashAlgorithm,String cashBoxIDUTF8String, String receiptIdentifierUTF8String, SecretKey aesKey) throws Exception {
-		// calc IV value (cashbox if + receipt identifer, both as UTF-8 Strings)
-		String IVUTF8StringRepresentation = cashBoxIDUTF8String + receiptIdentifierUTF8String;
-
-		// calc hash
-		MessageDigest messageDigest = MessageDigest.getInstance(hashAlgorithm);
-		byte[] hashValue = messageDigest.digest(IVUTF8StringRepresentation.getBytes());
-		byte[] concatenatedHashValue = new byte[16];
-		System.arraycopy(hashValue, 0, concatenatedHashValue, 0, 16);
-
-		// extract bytes 0-15 from hash value
-		ByteBuffer byteBufferIV = ByteBuffer.allocate(16);
-		byteBufferIV.put(concatenatedHashValue);
-
-		// IV for AES algorithm
-		byte[] IV = byteBufferIV.array();
-
-		// prepare AES cipher with CTR/ICM mode, NoPadding is essential for the
-		// decryption process. Padding could not be reconstructed due
-		// to storing only 8 bytes of the cipher text (not the full 16 bytes)
-		// (or 5 bytes if the minimum turnover length is used)
-		IvParameterSpec ivSpec = new IvParameterSpec(IV);
-
-		// start decryption process
-		ByteBuffer encryptedTurnOverValueComplete = ByteBuffer.allocate(16);
-
-		// decode turnover base64 value
-		byte[] encryptedTurnOverValue = base64Decode(encryptedTurnOverCounterBase64, false);
-
-		// extract length (required to extract the correct number of bytes from
-		// decrypted value
-		int lengthOfEncryptedTurnOverValue = encryptedTurnOverValue.length;
-
-		// prepare for decryption (require 128 bit blocks...)
-		encryptedTurnOverValueComplete.put(encryptedTurnOverValue);
-		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		// decryption setup, AES ciper in CTR mode, NO PADDING!)
-		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding", "BC");
-		cipher.init(Cipher.DECRYPT_MODE, aesKey, ivSpec);
-
-		// decrypt value, now we have a 128 bit block, with trailing junk bytes
-		byte[] testPlainTurnOverValueComplete = cipher.doFinal(encryptedTurnOverValue);
-
-		// remove junk bytes by extracting known length of plain text
-		byte[] testPlainTurnOverValue = new byte[lengthOfEncryptedTurnOverValue];
-		System.arraycopy(testPlainTurnOverValueComplete, 0, testPlainTurnOverValue, 0, lengthOfEncryptedTurnOverValue);
-		//return
-		return new BigInteger(testPlainTurnOverValue).longValue();
-		
-		// Alte BErechnung ! nicht länger relevant !
-		// create java LONG out of ByteArray (avoid Error when ByteArray is less then 4)
-		/*ByteBuffer plainTurnOverValueByteBuffer = ByteBuffer.wrap(testPlainTurnOverValue);
-		if (plainTurnOverValueByteBuffer.remaining() > 4) {		
-			return plainTurnOverValueByteBuffer.getLong();
-		}else{
-			long i=0;
-			byte[] test = base64Decode(encryptedTurnOverCounterBase64,false);
-			if(test[0]==83){
-				i=98989898;
-			}
-			if(test[0]==84){
-				i=97979797;
-			}
-			return i;
-		}*/
-	}
+	
 	// Funktion die einen String base64 entschlüsseln kann
-	public static byte[] base64Decode(String base64Data, boolean isUrlSafe) {
-		Base64 decoder = new Base64(isUrlSafe);
-		return decoder.decode(base64Data);
-	}
-	
-	
-	// Funktion die den Wert zurückgibt wenn ein verschlüsselter umsatzzähler eingegben wird.
-	// Input sind KassenId / Beleg ID (wie im QR File auszulesen) und der verschlüsselte Umsatz
-	// es wird zuerst der AES Schlüssel aus dem aktuellen Crypto File ausgelesen (nach dem 3 ") (wäre auch mit Json gegangen)
-	// der AES key wird Base64codiert und in die Entschlüssunlungs Funktion mitübergeben
-	private long CalcNewValue(String KassenID,String BelegID,String Umsatz,String FilePath) throws IOException{
-		long NewValue1 = 99; // --> Kennzeichnet Fehler !
-		File file = new File(FilePath);
-		if (file.exists()) {
-			FileInputStream inputStream = new FileInputStream(FilePath);
-			try {
-				String everything = "";
-				try {
-					everything = IOUtils.toString(inputStream);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					System.out.println("Keinen Key im Crypto File !");
-					Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-					setCursor(DefCursor);
-				}
-				String[] parts = everything.split("\"");
-				String key = parts[3];// 128 bit
-				byte[] a = base64Decode(key, true);
-				if(a.length<32){				
-					a = base64Decode("WQRtiiya3hYh/Uz44Bv3x8ETl1nrH6nCdErn69g5/lU=", true);
-				}
-				SecretKey aesKey = new SecretKeySpec(a, "AES");// AES Key in
-																// Byte Array
-																// einfügen !
-				try {
-					NewValue1 = decryptTurnOverCounter(Umsatz, "sha-256", KassenID, BelegID, aesKey);
-				} catch (Exception e) {
 
-					e.printStackTrace();
-				}
-			} finally {
-				inputStream.close();
-			}
-		}else{
-			System.out.println("#####     Crypto-File not Found!  No Decryption !   #####");
-		}
-		return NewValue1;
-	}
-	// Universale funktion um einen Text aus einem angebenen File zu lesen. (Input File-Path)
-	private String Readtxt(String File) throws IOException{
-		String Output="";
-		FileInputStream inputStream = new FileInputStream(File);
-		try {
-			Output = IOUtils.toString(inputStream);
-		} finally {
-			inputStream.close();
-		}
-		return Output;
-		
-	}
+	
+	
+	
+	
 	//Item Listener der auf das 1. ItemSelect schaut und den Start ordner Wechselt wenn ein neues File ausgewählt wurde
 	
 	class ItemChangeListener implements ItemListener{
@@ -2179,31 +1878,107 @@ public class MainFrame extends JFrame {
 		          Object item = arg0.getItem();
 		          // do something with object
 		          defaultFolerOpen= item.toString();
-		          try {
-						Files.createDirectory(Paths.get(defaultFolerOpen+"\\output"));
-					} catch (IOException e) {
-						System.out.println("Output Folder already existing");
-						e.printStackTrace();
-					}
-					
-					if (((DefaultComboBoxModel) selectedFolder_output.getModel()).getIndexOf("" + defaultFolerOpen + "\\output") == -1) {
-						selectedFolder_output.addItem("" + defaultFolerOpen + "\\output");
-						selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
-						if (selectedFolder_output.getItemCount() > 10) {
-							selectedFolder_output.removeItemAt(0);
+		          File f = new File(defaultFolerOpen+"\\output");
+		          if (!f.exists() && !f.isDirectory()){
+			          try {
+							Files.createDirectory(Paths.get(defaultFolerOpen+"\\output"));
+						} catch (IOException e) {
+							System.out.println("Output Folder already exists");
+							e.printStackTrace();
 						}
-					} else {
-						selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
-					}
-		       }
+						
+						if (((DefaultComboBoxModel) selectedFolder_output.getModel()).getIndexOf("" + defaultFolerOpen + "\\output") == -1) {
+							selectedFolder_output.addItem("" + defaultFolerOpen + "\\output");
+							selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
+							if (selectedFolder_output.getItemCount() > 10) {
+								selectedFolder_output.removeItemAt(0);
+							}
+						} else {
+							selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
+						}
+			       }
+			}
 		}       
 	}
-	// Funktion die es einem base64URL decodiern lässt.
-	public static String base64UrlDecode(String input) {
-	    String result = null;
-	    Base64 decoder = new Base64(true);
-	    byte[] decodedBytes = decoder.decode(input);
-	    result = new String(decodedBytes);
-	    return result;
+
+	// Listener der ein JDialog aufruft in dem man eine KassenID in den Verkettungswert umrechnen kann.
+	private class ConvertIdToChain implements ActionListener {
+
+		@SuppressWarnings("static-access")
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			JDialog Dialog = new JDialog((java.awt.Frame) null, "Convert KassenID", true);
+			Dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			Dialog.setSize(400,180);
+			Dimension frameSize = Dialog.getSize();
+			if (frameSize.height > screenSize.height) {
+				frameSize.height = screenSize.height;
+			}
+			if (frameSize.width > screenSize.width) {
+				frameSize.width = screenSize.width;
+			}
+			Dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+
+			JPanel Layout = new JPanel(new BorderLayout());
+			// label with original font
+			
+			JTextField KassenID = new JTextField();
+			KassenID.setPreferredSize(new Dimension(350, 25));
+			JTextField Output = new JTextField();
+			Output.setPreferredSize(new Dimension(350, 25));
+			Output.setEditable(false);
+			JLabel Equal = new JLabel("   =   ");
+			JPanel InputPanel = new JPanel(new FlowLayout());
+			InputPanel.add(KassenID);
+			InputPanel.add(Equal);
+			InputPanel.add(Output);
+			
+			JPanel ButtonPanel = new JPanel(new FlowLayout());
+			JButton Cancle = new JButton("Abbrechen");
+			JButton Calculate = new JButton("Umrechnen");
+
+			Calculate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					MessageDigest md;
+					try {
+						md = MessageDigest.getInstance("sha-256");
+						// calculate hash value
+						md.update(KassenID.getText().getBytes());
+						byte[] digest = md.digest();
+						// extract number of bytes (N, defined in RKsuite)
+						// from
+						// hash value
+						int bytesToExtract = 8;
+						byte[] conDigest = new byte[bytesToExtract];
+						System.arraycopy(digest, 0, conDigest, 0, bytesToExtract);
+						// encode value as BASE64 String ==> chainValue
+						byte[] Sig_Vor_Beleg = Base64.encodeBase64(conDigest, false);
+						String Sig_Vor_Beleg_String = new String(Sig_Vor_Beleg, "UTF-8");
+						Output.setText(Sig_Vor_Beleg_String);
+					} catch (NoSuchAlgorithmException | UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}	
+			});
+			Cancle.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+						Dialog.dispose();
+					}
+			});
+
+		
+			ButtonPanel.add(Cancle);
+			ButtonPanel.add(Calculate);
+			
+			Layout.add(InputPanel, BorderLayout.CENTER);
+			Layout.add(ButtonPanel, BorderLayout.SOUTH);
+			Dialog.add(Layout);
+			Dialog.setVisible(true);
+		}
 	}
+	
 }
