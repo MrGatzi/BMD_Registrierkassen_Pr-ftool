@@ -119,6 +119,7 @@ public class __MainFrame extends JFrame {
 	int countimer=0;
 	static __Coding code= new __Coding();
 	static __ReadFile read= new __ReadFile();
+	__ShowDepFileInConsole DepFunction = new __ShowDepFileInConsole();
 
 	public __MainFrame() {
 		try {
@@ -232,6 +233,13 @@ public class __MainFrame extends JFrame {
 		ShowDEP_FileInConsole ShowDEP_listen = new ShowDEP_FileInConsole();
 		ShowDEP.addActionListener(ShowDEP_listen);
 		CP_CenterGrid_Border_1_2_Flow_South.add(ShowDEP);
+		
+		//JButton for advanced DEP-Files.
+		/*JButton ShowDEP2 = new JButton();
+		ShowDEP2.setText("Show adv. DEP-File");
+		ShowadvDEP_FileInConsole ShowAdvDEP_listen = new ShowadvDEP_FileInConsole();
+		ShowDEP2.addActionListener(ShowAdvDEP_listen);
+		CP_CenterGrid_Border_1_2_Flow_South.add(ShowDEP2);*/
 		
 		ZukunftsausgbaeCheckbox = new JCheckBox("mit Zukunfts Ausgabe");
 		CP_CenterGrid_Border_1_2_Flow_South.add(ZukunftsausgbaeCheckbox);
@@ -593,16 +601,47 @@ public class __MainFrame extends JFrame {
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
 			
-			__ShowDepFileInConsole DepFunction = new __ShowDepFileInConsole();
 			String outputDepFile =DepFunction.show(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
-			int count = StringUtils.countMatches(outputDepFile, "\r\n"); // commons-lang3-3.6.jar in /lib
-			Outputarea.setRows(count+10);
+			//int count =  // commons-lang3-3.6.jar in /lib
+			Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
 			Outputarea.setText(outputDepFile);
 			
 			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			setCursor(DefCursor);
 		}
 	}
+	
+	// Listener der auf den Button "Show adv. DEP-File" hört. Selbe Funktion wie
+	// showDEP_FileInConsole nur mit der möglichkeit das man mehrer Exports in
+	// einem File haben kann.
+
+		private class ShowadvDEP_FileInConsole implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//showDepFileinConsole
+				Outputarea.setText("Show adv DEP-File: ");
+				Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+				setCursor(hourglassCursor);
+				
+				String outputDepFile="";
+				try {
+					outputDepFile = DepFunction.showAdv(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//int count =  // commons-lang3-3.6.jar in /lib
+				Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
+				Outputarea.setText(outputDepFile);
+				
+				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+				setCursor(DefCursor);
+			}
+		}
 	
 	
 	
@@ -1279,89 +1318,98 @@ public class __MainFrame extends JFrame {
 			// Wird am Ende des Listeners wieder zurückgesetzt.
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
-
-			Runtime runtime = Runtime.getRuntime();
-			Process process = null;
 			if (selectedFolder_show_2.getSelectedItem() != null && selectedFolder_show_5.getSelectedItem() != null) {
-				DefaultStringDEP = selectedFolder_show_2.getSelectedItem().toString();
-				DefaultStringCRYPTO = selectedFolder_show_5.getSelectedItem().toString();
-				try {
-					if(selectedFolder_output.getSelectedItem()!=null){
-						File file = new File(selectedFolder_output.getSelectedItem().toString());
-						if(file.isDirectory()==true){
-							if(ZukunftsausgbaeCheckbox.isSelected()==true){
-								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
-							}else{
-							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
-							}
-						}else{
-							if(ZukunftsausgbaeCheckbox.isSelected()==true){
-								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-							}else{
-								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-							}
-							
-						}
-					}else{
-						if(ZukunftsausgbaeCheckbox.isSelected()==true){
-							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-						}else{
-							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-						}
-					}
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} // you might need the full path
-				InputStream is = process.getInputStream();
-				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(isr);
-				String line;
-				// Funktionsblock zum schreiben auf die JTextaera
-				// da die Jtextarea eine Character begrenzung in der Weite hat
-				// (~~~105 Chars) und es Zeilen gibt die mehr beanspruchen
-				// muss zuerst geprüft werden ob die Zeile größer ist. Wenn Sie
-				// größer ist wird sie soo oft geteilt auf die JTextarea
-				// geschrieben
-				// bis keine Chars mehr vorhanden sind.
-				// nach jeder geschriebenen Zeile wird die JTextarea um eine
-				// "row" erweiterd
-				// Am schluss wird der Courser wieder ganz am Anfang gestellt
-				try {
-						while ((line = br.readLine()) !=null) {
-
-							if (line.length() > 105) {
-								int lineCounter = line.length();
-								int whileFlag = 0;
-								while (lineCounter - 105 > 0) {
-									Outputarea.append(line.substring(whileFlag, whileFlag + 105) + "\n");
-									whileFlag = whileFlag + 105;
-									lineCounter = lineCounter - 105;
-									Outputarea.setRows(Outputarea.getRows() + 1);
-								}
-								Outputarea.append(line.substring(whileFlag, line.length()));
-								Outputarea.setRows(Outputarea.getRows() + 2);
-							} else {
-								Outputarea.append(line + "\r\n");
-								Outputarea.setRows(Outputarea.getRows() + 1);
-								
-							}
-							Outputarea.update(Outputarea.getGraphics());
-							Outputarea.setCaretPosition(Outputarea.getText().length() - 1);
-						}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Outputarea.setCaretPosition(0);
-				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-				setCursor(DefCursor);
+				String outputDepFile =DepFunction.runDepTest(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString(), ZukunftsausgbaeCheckbox.isSelected(), selectedFolder_output.getSelectedItem().toString());
+				Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
+				Outputarea.setText(outputDepFile);
 			} else {
 				Outputarea.append("Nothing selected!!");
-				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-				setCursor(DefCursor);
 			}
+			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			setCursor(DefCursor);
+			
+//			Runtime runtime = Runtime.getRuntime();
+//			Process process = null;
+//			if (selectedFolder_show_2.getSelectedItem() != null && selectedFolder_show_5.getSelectedItem() != null) {
+//				DefaultStringDEP = selectedFolder_show_2.getSelectedItem().toString();
+//				DefaultStringCRYPTO = selectedFolder_show_5.getSelectedItem().toString();
+//				try {
+//					if(selectedFolder_output.getSelectedItem()!=null){
+//						File file = new File(selectedFolder_output.getSelectedItem().toString());
+//						if(file.isDirectory()==true){
+//							if(ZukunftsausgbaeCheckbox.isSelected()==true){
+//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
+//							}else{
+//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
+//							}
+//						}else{
+//							if(ZukunftsausgbaeCheckbox.isSelected()==true){
+//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
+//							}else{
+//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
+//							}
+//							
+//						}
+//					}else{
+//						if(ZukunftsausgbaeCheckbox.isSelected()==true){
+//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
+//						}else{
+//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
+//						}
+//					}
+//					
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} // you might need the full path
+//				InputStream is = process.getInputStream();
+//				InputStreamReader isr = new InputStreamReader(is);
+//				BufferedReader br = new BufferedReader(isr);
+//				String line;
+//				// Funktionsblock zum schreiben auf die JTextaera
+//				// da die Jtextarea eine Character begrenzung in der Weite hat
+//				// (~~~105 Chars) und es Zeilen gibt die mehr beanspruchen
+//				// muss zuerst geprüft werden ob die Zeile größer ist. Wenn Sie
+//				// größer ist wird sie soo oft geteilt auf die JTextarea
+//				// geschrieben
+//				// bis keine Chars mehr vorhanden sind.
+//				// nach jeder geschriebenen Zeile wird die JTextarea um eine
+//				// "row" erweiterd
+//				// Am schluss wird der Courser wieder ganz am Anfang gestellt
+//				try {
+//						while ((line = br.readLine()) !=null) {
+//
+//							if (line.length() > 105) {
+//								int lineCounter = line.length();
+//								int whileFlag = 0;
+//								while (lineCounter - 105 > 0) {
+//									Outputarea.append(line.substring(whileFlag, whileFlag + 105) + "\n");
+//									whileFlag = whileFlag + 105;
+//									lineCounter = lineCounter - 105;
+//									Outputarea.setRows(Outputarea.getRows() + 1);
+//								}
+//								Outputarea.append(line.substring(whileFlag, line.length()));
+//								Outputarea.setRows(Outputarea.getRows() + 2);
+//							} else {
+//								Outputarea.append(line + "\r\n");
+//								Outputarea.setRows(Outputarea.getRows() + 1);
+//								
+//							}
+//							Outputarea.update(Outputarea.getGraphics());
+//							Outputarea.setCaretPosition(Outputarea.getText().length() - 1);
+//						}
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				Outputarea.setCaretPosition(0);
+//				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+//				setCursor(DefCursor);
+//			} else {
+//				Outputarea.append("Nothing selected!!");
+//				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+//				setCursor(DefCursor);
+//			}
 		}
 
 	}
@@ -1395,7 +1443,7 @@ public class __MainFrame extends JFrame {
 					if(selectedFolder_output.getSelectedItem()!=null){
 						File file = new File(selectedFolder_output.getSelectedItem().toString());
 						if(file.isDirectory()==true){
-							process = runtime.exec("java -jar regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o "+selectedFolder_output.getSelectedItem().toString());
+							process = runtime.exec("java -jar  regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o "+selectedFolder_output.getSelectedItem().toString());
 						}
 						else{
 							process = runtime.exec("java -jar regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o OutputFiles");

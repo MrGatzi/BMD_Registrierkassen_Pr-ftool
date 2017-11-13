@@ -1,9 +1,0 @@
-{
-  "verificationId" : "VERIFICATION_FROM_APP",
-  "version" : 1,
-  "verificationName" : "Prüfergebnis",
-  "verificationTextualDescription" : "Es wird die vollständige Belegprüfung durchgeführt. Das Ergebnis enthält nur mehr die wesentlichen Informationen und wird an die App zurückgegeben.",
-  "verificationState" : "PASS",
-  "verificationResultDetailedMessage" : "Der vorliegende Beleg wurde gesetzeskonform von einer erfolgreich in Betrieb genommenen Registrierkasse erstellt. Weitere Informationen dazu können über FinanzOnline abgerufen werden. Bundesministerium für Finanzen.",
-  "verificationTimestamp" : "2016-11-05T16:37:18.241+01:00"
-}

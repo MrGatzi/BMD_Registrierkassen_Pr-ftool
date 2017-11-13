@@ -1,7 +1,0 @@
-{
-  "verificationId" : "RKSVDB",
-  "version" : 1,
-  "verificationState" : "FAIL",
-  "verificationResultDetailedMessage" : "Eine Prüfung des Belegs war nicht möglich, da nur Belege mit einem zeitlich realistischen Belegausstellungsdatum geprüft werden können. Bundesministerium für Finanzen.",
-  "verificationTimestamp" : "2016-09-09T09:05:58.324+02:00"
-}
