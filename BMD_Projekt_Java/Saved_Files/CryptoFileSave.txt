@@ -1,1 +1,1 @@
-C:\Users\Martin\Desktop\BMD_Daten\pcpocf.json?C:\Users\Martin\Desktop\BMD_Daten\Problem am 12.11\cfpost.json?C:\Users\Martin\Desktop\BMD_Daten\Problem_am_12.11\cfpost.json?
+C:\Users\Martin\Desktop\BMD_Tests\0010_cashbox.json?D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_2\cryptographicMaterialContainer.json?D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_3\cryptographicMaterialContainer.json?C:\Users\Martin\Desktop\BMD_Tests\0012_dep.json?C:\Users\Martin\Desktop\BMD_Tests\0006_dep.json?C:\Users\Martin\Desktop\BMD_Tests\0000_app.json?

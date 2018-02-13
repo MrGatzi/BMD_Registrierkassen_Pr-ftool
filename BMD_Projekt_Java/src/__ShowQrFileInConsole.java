@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -89,6 +93,72 @@ public class __ShowQrFileInConsole {
 				Flag++;
 			}
 		} catch (IOException | NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outputstring.toString();
+	}
+	public String runQRTest(String DefaultStringQR, String DefaultStringCRYPTO, boolean futurBox, String outputFile,boolean DetailsBox){
+		Runtime runtime = Runtime.getRuntime();
+		Process process = null;
+		StringBuilder outputstring = new StringBuilder();
+		String proString="java -Xmx1500m -jar regkassen-verification-receipts-1.1.0.jar";
+		if(futurBox==true){
+			proString+=" -f";
+		}
+		if(DetailsBox==true){
+			proString+=" -v";
+		}
+		proString +=" -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO+" -o ";
+		if(outputFile!=null){
+			File file = new File(outputFile);
+			if(file.isDirectory()==true){
+				proString+=outputFile;
+			}
+			else{
+				proString+="OutputFiles";
+			}
+		}
+		
+		try {
+			process=runtime.exec(proString);
+		} catch (IOException e2) {
+			System.out.println("Error while calling regkassen-verification-receipts-1.1.0.jar on __ShowQrFileInConsole.java on Line 106");
+			e2.printStackTrace();
+		}
+		InputStream is = process.getInputStream();
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+		String line;
+
+		// Funktionsblock zum schreiben auf die JTextaera
+		// da die Jtextarea eine Character begrenzung in der Weite hat
+		// (~~~105 Chars) und es Zeilen gibt die mehr beanspruchen
+		// muss zuerst geprüft werden ob die Zeile größer ist. Wenn Sie
+		// größer ist wird sie soo oft geteilt auf die JTextarea
+		// geschrieben
+		// bis keine Chars mehr vorhanden sind.
+		// nach jeder geschriebenen Zeile wird die JTextarea um eine
+		// "row" erweiterd
+		// Am schluss wird der Courser wieder ganz am Anfang gestellt
+
+		try {
+			while ((line = br.readLine()) != null) {
+
+				if (line.length() > 105) {
+					int lineCounter = line.length();
+					int whileFlag = 0;
+					while (lineCounter - 105 > 0) {
+						outputstring.append(line.substring(whileFlag, whileFlag + 105) + "\r\n");
+						whileFlag = whileFlag + 105;
+						lineCounter = lineCounter - 105;
+					}
+					outputstring.append(line.substring(whileFlag, line.length())+ "\r\n");
+				} else {
+					outputstring.append(line + "\r\n");
+				}
+			}
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

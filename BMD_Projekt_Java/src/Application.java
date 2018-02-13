@@ -9,7 +9,7 @@ public class Application {
   /**
    * Construct and show the application.
    */
-	public __MainFrame frame = new __MainFrame();
+public __MainFrame frame = new __MainFrame();
   public Application() {
    
     // Validate frames that have preset sizes

@@ -61,13 +61,16 @@ public class __MainFrame extends JFrame {
 	private JPanel contentPane; // komplettes Layout
 	JTextArea Outputarea; // Textausgabe
 	JScrollPane ScrollBar; // Textausgabe -Scrollbar
-	JComboBox<String> selectedFolder_show_1; // JComboBox für Demokassen auswahl
-	JComboBox<String> selectedFolder_output; // JComboBox für OUTPUTFOLDER auswahl
-	JComboBox<String>selectedFolder_show_2; // JComboBox für DEP File
-	JComboBox<String> selectedFolder_show_4; // JComboBox für OR File
-	JComboBox<String> selectedFolder_show_5; // JComboBox für Crypofile 2
+	JComboBox<String> StartFolder_selectedFolder; // JComboBox für Demokassen auswahl
+	JComboBox<String> OutputFolder_selectedFolder; // JComboBox für OUTPUTFOLDER auswahl
+	JComboBox<String> DEP_selectedFolder; // JComboBox für DEP File
+	JComboBox<String> QR_selectedFolder; // JComboBox für OR File
+	JComboBox<String> Crypto_selectedFolder; // JComboBox für Crypofile 2
 	JCheckBox Filter; // JCheckBox um die Fehler anzuzeigen, funktioniert wie
-	JCheckBox ZukunftsausgbaeCheckbox;				// ein Button
+	JCheckBox FutureCheckboxDEP;				// ein Button
+	JCheckBox DetailsCheckboxDEP;	
+	JCheckBox FutureCheckboxQR;				// ein Button
+	JCheckBox DetailsCheckboxQR;	
 	String DefaultString = "C:/Users/"; // Default String wenn kein Ordner
 										// ausgewählt wurde für Demokasse
 										// zum erstellen
@@ -120,6 +123,7 @@ public class __MainFrame extends JFrame {
 	static __Coding code= new __Coding();
 	static __ReadFile read= new __ReadFile();
 	__ShowDepFileInConsole DepFunction = new __ShowDepFileInConsole();
+	__ShowQrFileInConsole QRFunction = new __ShowQrFileInConsole();
 
 	public __MainFrame() {
 		try {
@@ -162,33 +166,35 @@ public class __MainFrame extends JFrame {
 		JPanel CP_CenterGrid_Flow_1_1_center = new JPanel(new FlowLayout());
 		
 		// JTextField to show the select Folder
-		selectedFolder_show_1 = new JComboBox();
-		selectedFolder_show_1.setEditable(false);
-		selectedFolder_show_1.setPreferredSize(new Dimension(600, 25));
-		ItemChangeListener ItemListen = new ItemChangeListener();
-		selectedFolder_show_1.addItemListener(ItemListen);
-		CP_CenterGrid_Flow_1_1_north.add(selectedFolder_show_1);
+		StartFolder_selectedFolder = new JComboBox();
+		StartFolder_selectedFolder.setEditable(false);
+		StartFolder_selectedFolder.setPreferredSize(new Dimension(600, 25));
+		NewOrderItemListenerDefaultFolder ChangeListenerDefault = new NewOrderItemListenerDefaultFolder();
+		StartFolder_selectedFolder.addActionListener(ChangeListenerDefault);
+		CP_CenterGrid_Flow_1_1_north.add(StartFolder_selectedFolder);
 		// JButton select Folder
 		JButton selectFolder = new JButton();
 		selectFolder.setText("Select Folder");
-		FM_Listener searchListen = new FM_Listener();
+		ChooseDemoFolder searchListen = new ChooseDemoFolder();
 		selectFolder.addActionListener(searchListen);
 		CP_CenterGrid_Flow_1_1_north.add(selectFolder);
 		// JButton Create Demo + List
 		JButton createDemo = new JButton();
 		createDemo.setText("DemoKassen erstellen");
-		CreateDemoListener DemoList = new CreateDemoListener();
+		CreateDemo DemoList = new CreateDemo();
 		createDemo.addActionListener(DemoList);
 		CP_CenterGrid_Flow_1_1_north.add(createDemo);
 		
-		selectedFolder_output = new JComboBox();
-		selectedFolder_output.setEditable(false);
-		selectedFolder_output.setPreferredSize(new Dimension(600, 25));
-		CP_CenterGrid_Flow_1_1_center.add(selectedFolder_output);
+		OutputFolder_selectedFolder = new JComboBox();
+		OutputFolder_selectedFolder.setEditable(false);
+		OutputFolder_selectedFolder.setPreferredSize(new Dimension(600, 25));
+		NewOrderItemListener ChangeListenerOut = new NewOrderItemListener();
+		OutputFolder_selectedFolder.addActionListener(ChangeListenerOut);
+		CP_CenterGrid_Flow_1_1_center.add(OutputFolder_selectedFolder);
 		// JButton select Folder
 		JButton selectOutput = new JButton();
 		selectOutput.setText("Select Output Folder");
-		FM_Listener_Output outputListener = new FM_Listener_Output();
+		ChooseOutputFolder outputListener = new ChooseOutputFolder();
 		selectOutput.addActionListener(outputListener);
 		CP_CenterGrid_Flow_1_1_center.add(selectOutput);
 		// JButton Create Demo + List
@@ -201,21 +207,24 @@ public class __MainFrame extends JFrame {
 		JPanel CP_CenterGrid_Border_1_2 = new JPanel(new BorderLayout());
 		// NorthPart of the CP_CenterGrid_Border_1_2 (JTextfield+JButton)
 		JPanel CP_CenterGrid_Border_1_2_Flow_North = new JPanel(new FlowLayout());
+		
 		// JTextfield to show Path
-		selectedFolder_show_2 = new JComboBox();
-		selectedFolder_show_2.setEditable(false);
-		selectedFolder_show_2.setPreferredSize(new Dimension(600, 25));
-		CP_CenterGrid_Border_1_2_Flow_North.add(selectedFolder_show_2);
+		DEP_selectedFolder = new JComboBox();
+		DEP_selectedFolder.setEditable(false);
+		DEP_selectedFolder.setPreferredSize(new Dimension(600, 25));
+		NewOrderItemListener ChangeListenerDEP = new NewOrderItemListener();
+		DEP_selectedFolder.addActionListener(ChangeListenerDEP);
+		CP_CenterGrid_Border_1_2_Flow_North.add(DEP_selectedFolder);
 		
 		// JButton select Json
 		JButton selectDEPFile = new JButton();
 		selectDEPFile.setText("Select JSON DEP-EXPORT-FILE ");
-		searchDEPDemoListener DEPDemoListener = new searchDEPDemoListener();
+		ChooseDEPFile DEPDemoListener = new ChooseDEPFile();
 		selectDEPFile.addActionListener(DEPDemoListener);
 		CP_CenterGrid_Border_1_2_Flow_North.add(selectDEPFile);
 		JButton Show_DEP = new JButton(warnIcon);
 		Show_DEP.setPreferredSize(new Dimension(30, 25));
-		ShowDEP_selected Show_DEP_ss = new ShowDEP_selected();
+		OpenDepFileSelected Show_DEP_ss = new OpenDepFileSelected();
 		Show_DEP.addActionListener(Show_DEP_ss);
 		CP_CenterGrid_Border_1_2_Flow_North.add(Show_DEP);
 		// southPart of the CP_CenterGrid_Border_1_2
@@ -224,13 +233,13 @@ public class __MainFrame extends JFrame {
 		// JButton to Run DEP Test
 		JButton DEPTestButton = new JButton();
 		DEPTestButton.setText("Run DEP Test");
-		DEPTestListener DEPTestGoListener = new DEPTestListener();
+		RunDepTest DEPTestGoListener = new RunDepTest();
 		DEPTestButton.addActionListener(DEPTestGoListener);
 		CP_CenterGrid_Border_1_2_Flow_South.add(DEPTestButton);
 		//JButton to decypt DEP-FIle and write it to console
 		JButton ShowDEP = new JButton();
 		ShowDEP.setText("Show DEP-File");
-		ShowDEP_FileInConsole ShowDEP_listen = new ShowDEP_FileInConsole();
+		ShowDepFileInConsole ShowDEP_listen = new ShowDepFileInConsole();
 		ShowDEP.addActionListener(ShowDEP_listen);
 		CP_CenterGrid_Border_1_2_Flow_South.add(ShowDEP);
 		
@@ -241,8 +250,10 @@ public class __MainFrame extends JFrame {
 		ShowDEP2.addActionListener(ShowAdvDEP_listen);
 		CP_CenterGrid_Border_1_2_Flow_South.add(ShowDEP2);*/
 		
-		ZukunftsausgbaeCheckbox = new JCheckBox("mit Zukunfts Ausgabe");
-		CP_CenterGrid_Border_1_2_Flow_South.add(ZukunftsausgbaeCheckbox);
+		FutureCheckboxDEP = new JCheckBox("Belege mit Zukunftsdatum gültig");
+		CP_CenterGrid_Border_1_2_Flow_South.add(FutureCheckboxDEP);
+		DetailsCheckboxDEP = new JCheckBox("Details");
+		CP_CenterGrid_Border_1_2_Flow_South.add(DetailsCheckboxDEP);
 		
 		
 		// CenterPart of the CP_CenterGrid_Border_1_2
@@ -261,41 +272,45 @@ public class __MainFrame extends JFrame {
 		// NorthPart of the CP_CenterGrid_Border_1_2 (JTextfield+JButton)
 		JPanel CP_CenterGrid_Border_1_3_Flow_North = new JPanel(new FlowLayout());
 		// JTextfield to show Path
-		selectedFolder_show_4 = new JComboBox();
-		selectedFolder_show_4.setEditable(false);
-		selectedFolder_show_4.setPreferredSize(new Dimension(600, 25));
-		CP_CenterGrid_Border_1_3_Flow_North.add(selectedFolder_show_4);
+		QR_selectedFolder = new JComboBox();
+		QR_selectedFolder.setEditable(false);
+		QR_selectedFolder.setPreferredSize(new Dimension(600, 25));		
+		NewOrderItemListener ChangeListenerQR = new NewOrderItemListener();
+		QR_selectedFolder.addActionListener(ChangeListenerQR);
+		CP_CenterGrid_Border_1_3_Flow_North.add(QR_selectedFolder);
 		// JButton select Json
 		JButton SelectQRFile = new JButton();
 		SelectQRFile.setText("Select JSON QR-CODE-REP-FILE ");
-		searchQRFileListener QRFileListener = new searchQRFileListener();
+		ChooseQRFile QRFileListener = new ChooseQRFile();
 		SelectQRFile.addActionListener(QRFileListener);
 		CP_CenterGrid_Border_1_3_Flow_North.add(SelectQRFile);
 		
 		JButton Show_QR = new JButton(warnIcon);
 		Show_QR.setPreferredSize(new Dimension(30, 25));
-		ShowQR_selected Show_QR_ss = new ShowQR_selected();
+		OpenQrFileSelected Show_QR_ss = new OpenQrFileSelected();
 		Show_QR.addActionListener(Show_QR_ss);
 		CP_CenterGrid_Border_1_3_Flow_North.add(Show_QR);
 		// (JTextfield+JButton+JButton)
 		JPanel CP_CenterGrid_Border_1_3_Flow_Center = new JPanel(new FlowLayout());
 		// JTextfield to show Path
-		selectedFolder_show_5 = new JComboBox();
-		selectedFolder_show_5.setEditable(false);
-		selectedFolder_show_5.setPreferredSize(new Dimension(600, 25));
-		CP_CenterGrid_Border_1_3_Flow_Center.add(selectedFolder_show_5);
+		Crypto_selectedFolder = new JComboBox();
+		Crypto_selectedFolder.setEditable(false);
+		Crypto_selectedFolder.setPreferredSize(new Dimension(600, 25));
+		NewOrderItemListener ChangeListenerCrypto = new NewOrderItemListener();
+		Crypto_selectedFolder.addActionListener(ChangeListenerCrypto);
+		CP_CenterGrid_Border_1_3_Flow_Center.add(Crypto_selectedFolder);
 		// JButton select Json
 
 		JButton selectCRYPTOFile2 = new JButton();
 		selectCRYPTOFile2.setText("Select JSON CRYPTOGRAPHIC-MATERIAL-FILE ");
-		searchCRYPTOListener2 searchCRYPTO2Listen = new searchCRYPTOListener2();
+		ChooseCryptoFile searchCRYPTO2Listen = new ChooseCryptoFile();
 		selectCRYPTOFile2.addActionListener(searchCRYPTO2Listen);
 		CP_CenterGrid_Border_1_3_Flow_Center.add(selectCRYPTOFile2);
 		// create a Button to show the QR_PDF
 		
 		JButton Show_Crypto = new JButton(warnIcon);
 		Show_Crypto.setPreferredSize(new Dimension(30, 25));
-		ShowCRYPTO_selected Show_Crypto_ss = new ShowCRYPTO_selected();
+		OpenCryptoFileSelected Show_Crypto_ss = new OpenCryptoFileSelected();
 		Show_Crypto.addActionListener(Show_Crypto_ss);
 		CP_CenterGrid_Border_1_3_Flow_Center.add(Show_Crypto);
 		// southPart of the CP_CenterGrid_Border_1_2
@@ -303,21 +318,28 @@ public class __MainFrame extends JFrame {
 		JPanel CP_CenterGrid_Border_1_3_Flow_South = new JPanel(new FlowLayout());
 		JButton QRTestButton = new JButton();
 		QRTestButton.setText("Run QR Test");
-		QRTestListener QRTestGoListener = new QRTestListener();
+		RunQRTest QRTestGoListener = new RunQRTest();
 		QRTestButton.addActionListener(QRTestGoListener);
 		CP_CenterGrid_Border_1_3_Flow_South.add(QRTestButton);
 		
 		JButton QRTestShow = new JButton();
 		QRTestShow.setText("Show QR File");
-		ShowQR_FileInConsole Show =new ShowQR_FileInConsole();
+		ShowQrFileInConsole Show =new ShowQrFileInConsole();
 		QRTestShow.addActionListener(Show);
 		CP_CenterGrid_Border_1_3_Flow_South.add(QRTestShow);
 		
 		JButton ShowInput = new JButton();
 		ShowInput.setText("Show Single QR-Line");
-		ShowSingleQR_Line Show_QR_Line =new ShowSingleQR_Line();
+		ShowSingleQrLine Show_QR_Line =new ShowSingleQrLine();
 		ShowInput.addActionListener(Show_QR_Line);
 		CP_CenterGrid_Border_1_3_Flow_South.add(ShowInput);
+		
+		FutureCheckboxQR= new JCheckBox("Belege mit Zukunftsdatum gültig");
+		CP_CenterGrid_Border_1_3_Flow_South.add(FutureCheckboxQR);
+		DetailsCheckboxQR = new JCheckBox("Details");
+		CP_CenterGrid_Border_1_3_Flow_South.add(DetailsCheckboxQR);
+		
+		
 		JLabel Platzhalter2=new JLabel("");
 		Platzhalter2.setPreferredSize(new Dimension(50,50));
 		CP_CenterGrid_Border_1_3.add(Platzhalter2, BorderLayout.NORTH);
@@ -350,7 +372,7 @@ public class __MainFrame extends JFrame {
 		JButton QRReaderButton = new JButton();
 		QRReaderButton.setText("Read QR Files");
 		QRReaderButton.setPreferredSize(new Dimension(100, 30));
-		QRReaderListener QRListener = new QRReaderListener();
+		QRPdfReader QRListener = new QRPdfReader();
 		QRReaderButton.addActionListener(QRListener);
 		QRboxs.add(QRReaderButton);
 
@@ -358,7 +380,7 @@ public class __MainFrame extends JFrame {
 		
 		JButton Show_PDF = new JButton(warnIcon);
 		Show_PDF.setPreferredSize(new Dimension(30, 30));
-		ShowPDF_selected Show_PDF_ss = new ShowPDF_selected();
+		OpenPdfSelected Show_PDF_ss = new OpenPdfSelected();
 		Show_PDF.addActionListener(Show_PDF_ss);
 		QRboxs.add(Show_PDF);
 
@@ -366,7 +388,7 @@ public class __MainFrame extends JFrame {
 		JButton ExportButton = new JButton();
 		ExportButton.setText("Export Lines");
 		ExportButton.setPreferredSize(new Dimension(100, 30));
-		exportTxTFileListener exportTxTFile = new exportTxTFileListener();
+		ExportTextFile exportTxTFile = new ExportTextFile();
 		ExportButton.addActionListener(exportTxTFile);
 
 		QRboxs.add(ExportButton);
@@ -374,7 +396,7 @@ public class __MainFrame extends JFrame {
 		// create Checkbox
 		Filter = new JCheckBox("Filter all Errors");
 		QRboxs.add(Filter);
-		CheckBoxListener CBListener = new CheckBoxListener();
+		ErrorCheckBox CBListener = new ErrorCheckBox();
 		Filter.addActionListener(CBListener);
 
 		// create Textarea where Mistakes can be counted
@@ -408,11 +430,11 @@ public class __MainFrame extends JFrame {
 	}
 	// Listener auf den Button "ShowCRYPTO".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
-	private class ShowCRYPTO_selected implements ActionListener {
+	private class OpenCryptoFileSelected implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        File myFile = new File(selectedFolder_show_5.getSelectedItem().toString());
+			        File myFile = new File(Crypto_selectedFolder.getSelectedItem().toString());
 			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
 			    }
@@ -421,11 +443,11 @@ public class __MainFrame extends JFrame {
 	}
 	// Listener auf den Button "ShowQR".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
-	private class ShowQR_selected implements ActionListener {
+	private class OpenQrFileSelected implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        File myFile = new File(selectedFolder_show_4.getSelectedItem().toString());
+			        File myFile = new File(QR_selectedFolder.getSelectedItem().toString());
 			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
@@ -435,11 +457,11 @@ public class __MainFrame extends JFrame {
 	}
 	// Listener auf den Button "ShowDEP".
 	// der Listener öffnet das File wenn ein geeignetes File auf dem PC gespeichert ist.
-	private class ShowDEP_selected implements ActionListener {
+	private class OpenDepFileSelected implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        File myFile = new File(selectedFolder_show_2.getSelectedItem().toString());
+			        File myFile = new File(DEP_selectedFolder.getSelectedItem().toString());
 			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
@@ -451,7 +473,7 @@ public class __MainFrame extends JFrame {
 	// Funktion die einen Dialog öffnet in den QR_Lines eingefügen werden können. Diese werden dann entschlüsselt und
 	// auf der Console angezeigt. 
 	// Ausserdem, werden die Zeilen (oder die Zeile) un ein Separates QR-Lines File gespeichert um sie erneut anzeigen zu können.
-	private class ShowSingleQR_Line implements ActionListener {
+	private class ShowSingleQrLine implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -503,16 +525,16 @@ public class __MainFrame extends JFrame {
 						Date date = new Date();
 						String InputText = Input.getText().toString();
 						String save="[\""+InputText+"\"]";
-						if (selectedFolder_output.getSelectedItem()!=null) {
-							try (PrintWriter out = new PrintWriter(selectedFolder_output.getSelectedItem().toString()
+						if (OutputFolder_selectedFolder.getSelectedItem()!=null) {
+							try (PrintWriter out = new PrintWriter(OutputFolder_selectedFolder.getSelectedItem().toString()
 									+ "/QR_Line_File_at" + dateFormat.format(date) + ".json")) {
 								out.println(save);
-								selectedFolder_show_4.addItem(selectedFolder_output.getSelectedItem().toString()
+								QR_selectedFolder.addItem(OutputFolder_selectedFolder.getSelectedItem().toString()
 										+ "/QR_Line_File_at" + dateFormat.format(date) + ".json");
-								selectedFolder_show_4.setSelectedItem(selectedFolder_output.getSelectedItem().toString()
+								QR_selectedFolder.setSelectedItem(OutputFolder_selectedFolder.getSelectedItem().toString()
 										+ "/QR_Line_File_at" + dateFormat.format(date) + ".json");
-								if (selectedFolder_show_4.getItemCount() > 5) {
-									selectedFolder_show_4.removeItemAt(0);
+								if (QR_selectedFolder.getItemCount() > 5) {
+									QR_selectedFolder.removeItemAt(0);
 								}
 
 							} catch (FileNotFoundException e2) {
@@ -523,12 +545,12 @@ public class __MainFrame extends JFrame {
 							try (PrintWriter out = new PrintWriter(DefaultOutput
 									+ "/QR_Line_File_at" + dateFormat.format(date) + ".json")) {
 								out.println(save);
-								selectedFolder_show_4.addItem(DefaultOutput
+								QR_selectedFolder.addItem(DefaultOutput
 										+ "/QR_Line_File_at" + dateFormat.format(date) + ".json");
-								selectedFolder_show_4.setSelectedItem(DefaultOutput
+								QR_selectedFolder.setSelectedItem(DefaultOutput
 										+ "/QR_Line_File_at" + dateFormat.format(date) + ".json");
-								if (selectedFolder_show_4.getItemCount() > 5) {
-									selectedFolder_show_4.removeItemAt(0);
+								if (QR_selectedFolder.getItemCount() > 5) {
+									QR_selectedFolder.removeItemAt(0);
 								}
 
 							} catch (FileNotFoundException e2) {
@@ -563,7 +585,7 @@ public class __MainFrame extends JFrame {
 									Outputarea.append(QR_Code_Titels[Flag2] + "  " + d + "  \r\n");
 								} else {
 									try {
-										i1 = code.CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
+										i1 = code.CalcNewValue(KassenID, BelegID, parts2[Flag2],Crypto_selectedFolder.getSelectedItem().toString());
 									} catch (IOException e1) {
 										// TODO Auto-generated catch block
 										e1.printStackTrace();
@@ -592,7 +614,7 @@ public class __MainFrame extends JFrame {
 	// Der passende Bereich wird Baser64 decodiert dann bekommt man einen Code wie bei einem QR-Code.
 	// dieser Code wird auf die selbe weise entschlüsselt wie es auch schon beim QR-decoder der Fall ist.
 	// und danach auf der Console im Programm ausgegeben.
-	private class ShowDEP_FileInConsole implements ActionListener {
+	private class ShowDepFileInConsole implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -601,7 +623,7 @@ public class __MainFrame extends JFrame {
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
 			
-			String outputDepFile =DepFunction.show(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
+			String outputDepFile =DepFunction.show(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString());
 			//int count =  // commons-lang3-3.6.jar in /lib
 			Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
 			Outputarea.setText(outputDepFile);
@@ -611,46 +633,10 @@ public class __MainFrame extends JFrame {
 		}
 	}
 	
-	// Listener der auf den Button "Show adv. DEP-File" hört. Selbe Funktion wie
-	// showDEP_FileInConsole nur mit der möglichkeit das man mehrer Exports in
-	// einem File haben kann.
-
-		private class ShowadvDEP_FileInConsole implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				//showDepFileinConsole
-				Outputarea.setText("Show adv DEP-File: ");
-				Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-				setCursor(hourglassCursor);
-				
-				String outputDepFile="";
-				try {
-					outputDepFile = DepFunction.showAdv(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//int count =  // commons-lang3-3.6.jar in /lib
-				Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
-				Outputarea.setText(outputDepFile);
-				
-				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-				setCursor(DefCursor);
-			}
-		}
-	
-	
-	
-	
-	
 	// Listener der ein ausgwähltes QR_Json_File ausliest und in der Console anzeigt
 	// ausserdem wird der Umsatzzähler entschlüsselt!
 	// egal ob ein QR-File das von PDF oder von Json ausgelesen wurde
-	private class ShowQR_FileInConsole implements ActionListener {
+	private class ShowQrFileInConsole implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -658,8 +644,7 @@ public class __MainFrame extends JFrame {
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
 			
-			__ShowQrFileInConsole QrFunction = new __ShowQrFileInConsole();
-			String outputQrFile =QrFunction.show(selectedFolder_show_4.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString());
+			String outputQrFile =QRFunction.show(QR_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString());
 			int count = StringUtils.countMatches(outputQrFile, "\r\n"); // commons-lang3-3.6.jar in /lib
 			Outputarea.setRows(count+10);
 			Outputarea.setText(outputQrFile);
@@ -669,7 +654,7 @@ public class __MainFrame extends JFrame {
 		}
 	}
 	// Listener die das zuletzt ausgewählte PDF anzeigt wenn ein PDf reader am PC installiert ist
-	private class ShowPDF_selected implements ActionListener {
+	private class OpenPdfSelected implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -839,9 +824,9 @@ public class __MainFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					UIDFlag=1;
 					if (base64AESKey.getText().length()>0&&PublicKey_k0_id.getText().length()>0&&PublicKey_k0.getText().length()>0&&PublicKey_k0_id.getText().length()>0) {
-						if(selectedFolder_output.getSelectedItem()!=null){
+						if(OutputFolder_selectedFolder.getSelectedItem()!=null){
 						try (PrintWriter out = new PrintWriter(
-								selectedFolder_output.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json")) {
+								OutputFolder_selectedFolder.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json")) {
 
 							String finalString = "{\"base64AESKey\": \"" + base64AESKey.getText()
 									+ "\",\"certificateOrPublicKeyMap\": {\"" + PublicKey_k0_id.getText() + "\": {\"id\": \""
@@ -861,12 +846,12 @@ public class __MainFrame extends JFrame {
 							finalString=finalString+"}}";
 							out.println(finalString);
 
-							selectedFolder_show_5
-									.addItem(selectedFolder_output.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json");
-							selectedFolder_show_5
-									.setSelectedItem(selectedFolder_output.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json");
-							if (selectedFolder_show_5.getItemCount() > 5) {
-								selectedFolder_show_5.removeItemAt(0);
+							Crypto_selectedFolder
+									.addItem(OutputFolder_selectedFolder.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json");
+							Crypto_selectedFolder
+									.setSelectedItem(OutputFolder_selectedFolder.getSelectedItem().toString()+"/CryptoFile_at" + dateFormat.format(date) + ".json");
+							if (Crypto_selectedFolder.getItemCount() > 5) {
+								Crypto_selectedFolder.removeItemAt(0);
 							}
 
 						} catch (FileNotFoundException e1) {
@@ -895,12 +880,12 @@ public class __MainFrame extends JFrame {
 								finalString=finalString+"}}";
 								out.println(finalString);
 
-								selectedFolder_show_5
+								Crypto_selectedFolder
 										.addItem(DefaultOutput+"/CryptoFile_at" + dateFormat.format(date) + ".json");
-								selectedFolder_show_5
+								Crypto_selectedFolder
 										.setSelectedItem(DefaultOutput+"/CryptoFile_at" + dateFormat.format(date) + ".json");
-								if (selectedFolder_show_5.getItemCount() > 5) {
-									selectedFolder_show_5.removeItemAt(0);
+								if (Crypto_selectedFolder.getItemCount() > 5) {
+									Crypto_selectedFolder.removeItemAt(0);
 								}
 
 							} catch (FileNotFoundException e1) {
@@ -928,7 +913,7 @@ public class __MainFrame extends JFrame {
 	// was dazu geschrieben wird steht in dem String : "WahtIsInTextArea"
 	// zusätzlich wird das Datum vergeben
 	// alles mit _ getrennt
-	private class exportTxTFileListener implements ActionListener {
+	private class ExportTextFile implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -972,7 +957,7 @@ public class __MainFrame extends JFrame {
 		}
 	}
 	
-	// Listerner der einen File Dialog öffnen soll wo dann ein QR PFD ausgewählt
+	// Listerner der einen File Dialog öffnen soll wo dann ein QR PDF ausgewählt
 	// werden kann
 	// Danach wird das PDF in eni JPG umgewandelt und anschließend wird der
 	// QRCode ausgelesen
@@ -983,11 +968,11 @@ public class __MainFrame extends JFrame {
 	// (also mit Bezeichnung) gespeichert werden die Daten in der
 	// gleiche Form wie das QR-file das man aus der Demokasse auswählen kann
 
-	private class QRReaderListener implements ActionListener {
+	private class QRPdfReader implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (selectedFolder_show_5.getSelectedItem() != null) {
+			if (Crypto_selectedFolder.getSelectedItem() != null) {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
 				Date date = new Date();
 				StringBuilder stringBuilder = new StringBuilder();
@@ -1074,7 +1059,7 @@ public class __MainFrame extends JFrame {
 								}
 								if (whileLoop == 10) {	
 									long i1=0;
-									i1=code.CalcNewValue(KassenID,BelegID,retval,selectedFolder_show_5.getSelectedItem().toString());
+									i1=code.CalcNewValue(KassenID,BelegID,retval,Crypto_selectedFolder.getSelectedItem().toString());
 									// Abfrage ob STO oder TRA (Trainings beleg oder Storno Beleg)
 									// oder Umsatz wert
 									if(i1==98989898){
@@ -1115,11 +1100,11 @@ public class __MainFrame extends JFrame {
 
 					try (PrintWriter out = new PrintWriter(
 							"Saved_Files/QR_Files_at" + dateFormat.format(date) + ".json")) {
-						selectedFolder_show_4.addItem("Saved_Files/QR_Files_at" + dateFormat.format(date) + ".json");
-						selectedFolder_show_4
+						QR_selectedFolder.addItem("Saved_Files/QR_Files_at" + dateFormat.format(date) + ".json");
+						QR_selectedFolder
 								.setSelectedItem("Saved_Files/QR_Files_at" + dateFormat.format(date) + ".json");
-						if (selectedFolder_show_4.getItemCount() > 5) {
-							selectedFolder_show_4.removeItemAt(0);
+						if (QR_selectedFolder.getItemCount() > 5) {
+							QR_selectedFolder.removeItemAt(0);
 						}
 						DefaultStringQR = "Saved_Files/QR_Files_at" + dateFormat.format(date) + ".json";
 						if(stringBuilder.length()>2){
@@ -1155,7 +1140,7 @@ public class __MainFrame extends JFrame {
 	// bei deaktivieren der Checkox wird die CheckboxFlag wieder auf 0 gestellt
 	// und der Refferenztext wieder auf die
 	// Textarea hinausgeschrieben
-	private class CheckBoxListener implements ActionListener {
+	private class ErrorCheckBox implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1243,16 +1228,16 @@ public class __MainFrame extends JFrame {
 	// erstellen
 	// Wenn er ausgeführt wird wird ein cmd Befehl ausgeführt -
 	// egkassen-demo-0.7.jar mit DefaultString als Speicherort
-	private class CreateDemoListener implements ActionListener {
+	private class CreateDemo implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			Outputarea.setRows(5);
 			WahtIsInTextArea = "DemoKassenerstellung";
 			ErrorLog_Flag = "Nothing";
-			if (selectedFolder_show_1.getSelectedItem() != null) {
+			if (StartFolder_selectedFolder.getSelectedItem() != null) {
 				Outputarea.setText("Erstelle Demo Kassen\r\n");
-				DefaultString = selectedFolder_show_1.getSelectedItem().toString();
+				DefaultString = StartFolder_selectedFolder.getSelectedItem().toString();
 				Outputarea.append("Writing to : " + DefaultString + "\r\n");
 
 				// wenn der Listener aufgerufen wird dann wird der Mausizeiger
@@ -1303,7 +1288,7 @@ public class __MainFrame extends JFrame {
 	// erstellen
 	// der DEP Test wird über die komandozeile aufgerufen. danach wird jede einzelne Zeile die die Komandozeile ausgibt überprüft
 	// und sie wird in die TextArea ausgegeben
-	private class DEPTestListener implements ActionListener {
+	private class RunDepTest implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1318,98 +1303,20 @@ public class __MainFrame extends JFrame {
 			// Wird am Ende des Listeners wieder zurückgesetzt.
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
-			if (selectedFolder_show_2.getSelectedItem() != null && selectedFolder_show_5.getSelectedItem() != null) {
-				String outputDepFile =DepFunction.runDepTest(selectedFolder_show_2.getSelectedItem().toString(), selectedFolder_show_5.getSelectedItem().toString(), ZukunftsausgbaeCheckbox.isSelected(), selectedFolder_output.getSelectedItem().toString());
-				Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
-				Outputarea.setText(outputDepFile);
-			} else {
-				Outputarea.append("Nothing selected!!");
+			if(OutputFolder_selectedFolder.getSelectedItem()!=null){
+				if (DEP_selectedFolder.getSelectedItem() != null && Crypto_selectedFolder.getSelectedItem() != null) {
+					String outputDepFile =DepFunction.runDepTest(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString(), FutureCheckboxDEP.isSelected(), OutputFolder_selectedFolder.getSelectedItem().toString(),DetailsCheckboxDEP.isSelected());
+					Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
+					Outputarea.setText(outputDepFile);
+				} else {
+					Outputarea.append("DEP or Crypto is missing ! ");
+				}	
+			}else{
+				Outputarea.append("NO OUTPUT - FOLDER !");
 			}
+			
 			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			setCursor(DefCursor);
-			
-//			Runtime runtime = Runtime.getRuntime();
-//			Process process = null;
-//			if (selectedFolder_show_2.getSelectedItem() != null && selectedFolder_show_5.getSelectedItem() != null) {
-//				DefaultStringDEP = selectedFolder_show_2.getSelectedItem().toString();
-//				DefaultStringCRYPTO = selectedFolder_show_5.getSelectedItem().toString();
-//				try {
-//					if(selectedFolder_output.getSelectedItem()!=null){
-//						File file = new File(selectedFolder_output.getSelectedItem().toString());
-//						if(file.isDirectory()==true){
-//							if(ZukunftsausgbaeCheckbox.isSelected()==true){
-//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
-//							}else{
-//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+selectedFolder_output.getSelectedItem().toString());
-//							}
-//						}else{
-//							if(ZukunftsausgbaeCheckbox.isSelected()==true){
-//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-//							}else{
-//								process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-//							}
-//							
-//						}
-//					}else{
-//						if(ZukunftsausgbaeCheckbox.isSelected()==true){
-//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-//						}else{
-//							process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-//						}
-//					}
-//					
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} // you might need the full path
-//				InputStream is = process.getInputStream();
-//				InputStreamReader isr = new InputStreamReader(is);
-//				BufferedReader br = new BufferedReader(isr);
-//				String line;
-//				// Funktionsblock zum schreiben auf die JTextaera
-//				// da die Jtextarea eine Character begrenzung in der Weite hat
-//				// (~~~105 Chars) und es Zeilen gibt die mehr beanspruchen
-//				// muss zuerst geprüft werden ob die Zeile größer ist. Wenn Sie
-//				// größer ist wird sie soo oft geteilt auf die JTextarea
-//				// geschrieben
-//				// bis keine Chars mehr vorhanden sind.
-//				// nach jeder geschriebenen Zeile wird die JTextarea um eine
-//				// "row" erweiterd
-//				// Am schluss wird der Courser wieder ganz am Anfang gestellt
-//				try {
-//						while ((line = br.readLine()) !=null) {
-//
-//							if (line.length() > 105) {
-//								int lineCounter = line.length();
-//								int whileFlag = 0;
-//								while (lineCounter - 105 > 0) {
-//									Outputarea.append(line.substring(whileFlag, whileFlag + 105) + "\n");
-//									whileFlag = whileFlag + 105;
-//									lineCounter = lineCounter - 105;
-//									Outputarea.setRows(Outputarea.getRows() + 1);
-//								}
-//								Outputarea.append(line.substring(whileFlag, line.length()));
-//								Outputarea.setRows(Outputarea.getRows() + 2);
-//							} else {
-//								Outputarea.append(line + "\r\n");
-//								Outputarea.setRows(Outputarea.getRows() + 1);
-//								
-//							}
-//							Outputarea.update(Outputarea.getGraphics());
-//							Outputarea.setCaretPosition(Outputarea.getText().length() - 1);
-//						}
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				Outputarea.setCaretPosition(0);
-//				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-//				setCursor(DefCursor);
-//			} else {
-//				Outputarea.append("Nothing selected!!");
-//				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-//				setCursor(DefCursor);
-//			}
 		}
 
 	}
@@ -1418,7 +1325,7 @@ public class __MainFrame extends JFrame {
 	// erstellen
 	// der QR-Test wird über die Kommando zeile ausgeführt
 	// danach wird  die Antwort der Komandozeile ausgelesen und jede einzelene Zeile auf die Textarea geschrieben
-	private class QRTestListener implements ActionListener {
+	private class RunQRTest implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1434,79 +1341,20 @@ public class __MainFrame extends JFrame {
 			// Wird am Ende des Listeners wieder zurückgesetzt.
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
-			if (selectedFolder_show_4.getSelectedItem() != null&& selectedFolder_show_5.getSelectedItem() != null) {
-				DefaultStringQR = selectedFolder_show_4.getSelectedItem().toString();
-				DefaultStringCRYPTO2 = selectedFolder_show_5.getSelectedItem().toString();
-				Runtime runtime = Runtime.getRuntime();
-				Process process = null;
-				try {
-					if(selectedFolder_output.getSelectedItem()!=null){
-						File file = new File(selectedFolder_output.getSelectedItem().toString());
-						if(file.isDirectory()==true){
-							process = runtime.exec("java -jar  regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o "+selectedFolder_output.getSelectedItem().toString());
-						}
-						else{
-							process = runtime.exec("java -jar regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o OutputFiles");
-						}
-					}
-					else{
-						process = runtime.exec("java -jar regkassen-verification-receipts-1.0.0.jar -i " + DefaultStringQR + " -c " + DefaultStringCRYPTO2+" -o OutputFiles");
-					}
-					/*process = runtime.exec("java -jar regkassen-verification-receipts-0.7.jar -i " + DefaultStringQR
-							+ " -c " + DefaultStringCRYPTO2+" -o OutputFiles");*/
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} // you might need the full path
-				InputStream is = process.getInputStream();
-				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(isr);
-				String line;
-
-				// Funktionsblock zum schreiben auf die JTextaera
-				// da die Jtextarea eine Character begrenzung in der Weite hat
-				// (~~~105 Chars) und es Zeilen gibt die mehr beanspruchen
-				// muss zuerst geprüft werden ob die Zeile größer ist. Wenn Sie
-				// größer ist wird sie soo oft geteilt auf die JTextarea
-				// geschrieben
-				// bis keine Chars mehr vorhanden sind.
-				// nach jeder geschriebenen Zeile wird die JTextarea um eine
-				// "row" erweiterd
-				// Am schluss wird der Courser wieder ganz am Anfang gestellt
-
-				try {
-					while ((line = br.readLine()) != null) {
-
-						if (line.length() > 105) {
-							int lineCounter = line.length();
-							int whileFlag = 0;
-							while (lineCounter - 105 > 0) {
-								Outputarea.append(line.substring(whileFlag, whileFlag + 105) + "\n");
-								whileFlag = whileFlag + 105;
-								lineCounter = lineCounter - 105;
-								Outputarea.setRows(Outputarea.getRows() + 1);
-							}
-							Outputarea.append(line.substring(whileFlag, line.length()));
-							Outputarea.setRows(Outputarea.getRows() + 1);
-						} else {
-							Outputarea.append(line + "\r\n");
-							Outputarea.setRows(Outputarea.getRows() + 1);
-						}
-						Outputarea.update(Outputarea.getGraphics());
-						Outputarea.setCaretPosition(Outputarea.getText().length() - 1);
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if(OutputFolder_selectedFolder.getSelectedItem()!=null){
+				if (QR_selectedFolder.getSelectedItem() != null&& Crypto_selectedFolder.getSelectedItem() != null) {
+					String outputDepFile =QRFunction.runQRTest(QR_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString(), FutureCheckboxQR.isSelected(), OutputFolder_selectedFolder.getSelectedItem().toString(),DetailsCheckboxQR.isSelected());
+					Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
+					Outputarea.setText(outputDepFile);
+				} else {
+					Outputarea.append("Nothing selected!!");
+				
 				}
-				Outputarea.setCaretPosition(0);
-				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-				setCursor(DefCursor);
-			} else {
-				Outputarea.append("Nothing selected!!");
-				Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-				setCursor(DefCursor);
+			}else{
+				Outputarea.append("NO OUTPUT - FOLDER !");
 			}
+			Cursor DefCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			setCursor(DefCursor);
 		}
 
 	}
@@ -1514,46 +1362,55 @@ public class __MainFrame extends JFrame {
 	// Listener auf den Button der Zustänig dafür ist die Demokassen speicherOrt
 	// ordner auszuwählen.
 	// ACHTUNG dieser speicherplattz ist auch der Default speicherplatz ! 
-	private class FM_Listener implements ActionListener {
+	private class ChooseDemoFolder implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
 			JFrame Dialog = new JFrame();
 			JFileChooser fileChooser1 = new JFileChooser(new File(defaultFolerOpen));
-			//fileChooser1.setCurrentDirectory(new File(System.getProperty(defaultFolerOpen)));
 			fileChooser1.setAcceptAllFileFilterUsed(false);
 			fileChooser1.setDialogTitle("Wählen Sie einen Ordner aus wo die Demoversion gespeichert werden kann :");
 			fileChooser1.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			
 			int result = fileChooser1.showOpenDialog(Dialog);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = fileChooser1.getSelectedFile();
-				// Hier wird zuerst überprüft ob es besagtes Item schon in der
-				// JComboBox gibt
-				if (((DefaultComboBoxModel) selectedFolder_show_1.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
-					selectedFolder_show_1.addItem("" + selectedFile.getAbsolutePath() + "");
-					selectedFolder_show_1.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-					if (selectedFolder_show_1.getItemCount() > 10) {
-						selectedFolder_show_1.removeItemAt(0);
+				if (((DefaultComboBoxModel) StartFolder_selectedFolder.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
+					StartFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					StartFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if (StartFolder_selectedFolder.getItemCount() > 10) {
+						StartFolder_selectedFolder.removeItemAt(11);
 					}
-				} else {
-					selectedFolder_show_1.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-				}
-				try {
-					Files.createDirectory(Paths.get(selectedFile.getAbsolutePath()+"\\output"));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				if (((DefaultComboBoxModel) selectedFolder_output.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "\\output") == -1) {
-					selectedFolder_output.addItem("" + selectedFile.getAbsolutePath() + "\\output");
-					selectedFolder_output.setSelectedItem("" + selectedFile.getAbsolutePath() + "\\output");
-					if (selectedFolder_output.getItemCount() > 10) {
-						selectedFolder_output.removeItemAt(0);
+					if(Files.notExists(Paths.get(selectedFile.getAbsolutePath()+"\\output"))){
+						try {
+							Files.createDirectory(Paths.get(selectedFile.getAbsolutePath()+"\\output"));
+						} catch (IOException e) {
+							System.out.println("couldn't create output Folder !");
+							e.printStackTrace();
+						}
 					}
+					
+					if (((DefaultComboBoxModel) OutputFolder_selectedFolder.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "\\output") == -1) {
+						OutputFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "\\output",0);
+						OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "\\output");
+						if (OutputFolder_selectedFolder.getItemCount() > 10) {
+							OutputFolder_selectedFolder.removeItemAt(11);
+						}
+					} else {
+						OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "\\output");
+						int index = OutputFolder_selectedFolder.getSelectedIndex();
+						OutputFolder_selectedFolder.removeItemAt(index);
+						OutputFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "\\output",0);
+						OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "\\output");
+					}
+					
 				} else {
-					selectedFolder_output.setSelectedItem("" + selectedFile.getAbsolutePath() + "\\output");
+					StartFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					int index = StartFolder_selectedFolder.getSelectedIndex();
+					StartFolder_selectedFolder.removeItemAt(index);
+					StartFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					StartFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
 				}
 				DefaultString = selectedFile.getAbsolutePath();
 				defaultFolerOpen=selectedFile.getAbsolutePath();
@@ -1565,7 +1422,7 @@ public class __MainFrame extends JFrame {
 	}
 	// Listener mit dem man den Speicherort für die Output files bestimmen kann.
 	// öffnet den Default Folder
-	private class FM_Listener_Output implements ActionListener {
+	private class ChooseOutputFolder implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1580,14 +1437,18 @@ public class __MainFrame extends JFrame {
 				File selectedFile = fileChooser1.getSelectedFile();
 				// Hier wird zuerst überprüft ob es besagtes Item schon in der
 				// JComboBox gibt
-				if (((DefaultComboBoxModel) selectedFolder_output.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
-					selectedFolder_output.addItem("" + selectedFile.getAbsolutePath() + "");
-					selectedFolder_output.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-					if (selectedFolder_output.getItemCount() > 10) {
-						selectedFolder_output.removeItemAt(0);
+				if (((DefaultComboBoxModel) OutputFolder_selectedFolder.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
+					OutputFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if (OutputFolder_selectedFolder.getItemCount() > 10) {
+						OutputFolder_selectedFolder.removeItemAt(11);
 					}
 				} else {
-					selectedFolder_output.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					int index = OutputFolder_selectedFolder.getSelectedIndex();
+					OutputFolder_selectedFolder.removeItemAt(index);
+					OutputFolder_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					OutputFolder_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
 				}
 			}
 		}
@@ -1596,7 +1457,7 @@ public class __MainFrame extends JFrame {
 
 	// Listener auf den Button der Zustänig dafür ist die DEPFILE speicherOrt
 	// ordner auszuwählen
-	private class searchDEPDemoListener implements ActionListener {
+	private class ChooseDEPFile implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1608,15 +1469,18 @@ public class __MainFrame extends JFrame {
 			int result = fileChooser2.showOpenDialog(Dialog);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = fileChooser2.getSelectedFile();
-				if (((DefaultComboBoxModel) selectedFolder_show_2.getModel())
-						.getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
-					selectedFolder_show_2.addItem("" + selectedFile.getAbsolutePath() + "");
-					selectedFolder_show_2.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-					if (selectedFolder_show_2.getItemCount() > 10) {
-						selectedFolder_show_2.removeItemAt(0);
+				if (((DefaultComboBoxModel) DEP_selectedFolder.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
+					DEP_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					DEP_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if (DEP_selectedFolder.getItemCount() > 10) {
+						DEP_selectedFolder.removeItemAt(11);
 					}
 				} else {
-					selectedFolder_show_2.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					DEP_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					int index = DEP_selectedFolder.getSelectedIndex();
+					DEP_selectedFolder.removeItemAt(index);
+					DEP_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					DEP_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
 				}
 				DefaultStringDEP = selectedFile.getAbsolutePath();
 			}
@@ -1628,7 +1492,7 @@ public class __MainFrame extends JFrame {
 
 	// Listener auf den Button der Zustänig dafür ist die CRYPTOFILE2
 	// speicherOrt ordner auszuwählen
-	private class searchCRYPTOListener2 implements ActionListener {
+	private class ChooseCryptoFile implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 
 			JFrame Dialog = new JFrame();
@@ -1638,15 +1502,19 @@ public class __MainFrame extends JFrame {
 			int result = fileChooser2.showOpenDialog(Dialog);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = fileChooser2.getSelectedFile();
-				if (((DefaultComboBoxModel) selectedFolder_show_5.getModel())
+				if (((DefaultComboBoxModel) Crypto_selectedFolder.getModel())
 						.getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
-					selectedFolder_show_5.addItem("" + selectedFile.getAbsolutePath() + "");
-					selectedFolder_show_5.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-					if (selectedFolder_show_5.getItemCount() > 5) {
-						selectedFolder_show_5.removeItemAt(0);
+					Crypto_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					Crypto_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if (Crypto_selectedFolder.getItemCount() > 5) {
+						Crypto_selectedFolder.removeItemAt(6);
 					}
 				} else {
-					selectedFolder_show_5.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					Crypto_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					int index = Crypto_selectedFolder.getSelectedIndex();
+					Crypto_selectedFolder.removeItemAt(index);
+					Crypto_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					Crypto_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
 				}
 				DefaultStringCRYPTO2 = selectedFile.getAbsolutePath();
 			}
@@ -1658,7 +1526,7 @@ public class __MainFrame extends JFrame {
 
 	// Listener auf den Button der Zustänig dafür ist die QR-File speicherOrt
 	// ordner auszuwählen
-	private class searchQRFileListener implements ActionListener {
+	private class ChooseQRFile implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -1670,15 +1538,21 @@ public class __MainFrame extends JFrame {
 			int result = fileChooser2.showOpenDialog(Dialog);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = fileChooser2.getSelectedFile();
-				if (((DefaultComboBoxModel) selectedFolder_show_4.getModel())
-						.getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
-					selectedFolder_show_4.addItem("" + selectedFile.getAbsolutePath() + "");
-					selectedFolder_show_4.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
-					if (selectedFolder_show_4.getItemCount() > 5) {
-						selectedFolder_show_4.removeItemAt(0);
+				if (((DefaultComboBoxModel) QR_selectedFolder.getModel()).getIndexOf("" + selectedFile.getAbsolutePath() + "") == -1) {
+					QR_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+					QR_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if (QR_selectedFolder.getItemCount() > 5) {
+						QR_selectedFolder.removeItemAt(6);
 					}
 				} else {
-					selectedFolder_show_4.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					if(new File(selectedFile.getAbsolutePath()).exists()){
+						QR_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+						int index = QR_selectedFolder.getSelectedIndex();
+						QR_selectedFolder.removeItemAt(index);
+						QR_selectedFolder.insertItemAt("" + selectedFile.getAbsolutePath() + "",0);
+						QR_selectedFolder.setSelectedItem("" + selectedFile.getAbsolutePath() + "");
+					}
+					
 				}
 				DefaultStringQR = selectedFile.getAbsolutePath();
 			}
@@ -1740,14 +1614,13 @@ public class __MainFrame extends JFrame {
 
 	// Funktion die die Items der Dorpdowns nimmt und in seperate TxtFiles
 	// speichert um sie beim nächsten aufruf wieder anzeigen zu können
-	
 	public void SaveDropdowns() {
-		//Dropdown für Save OldFiles
+		//Dropdown für Ouput Ordner
 		int j0 = -1;
 		StringBuilder stringBuilder0 = new StringBuilder();
-		while (j0 < selectedFolder_output.getItemCount() - 1) {
+		while (j0 < OutputFolder_selectedFolder.getItemCount() - 1) {
 			j0++;
-			stringBuilder0.append(selectedFolder_output.getItemAt(j0) + "?");
+			stringBuilder0.append(OutputFolder_selectedFolder.getItemAt(j0) + "?");
 		}
 		try (PrintWriter out = new PrintWriter("Saved_Files/OutputSave.txt")) {
 			// stringBuilder.setLength(stringBuilder.length() - 1);
@@ -1760,9 +1633,9 @@ public class __MainFrame extends JFrame {
 		// estes Dropdown für den Ordner der Demokassen
 		int j = -1;
 		StringBuilder stringBuilder = new StringBuilder();
-		while (j < selectedFolder_show_1.getItemCount() - 1) {
+		while (j < StartFolder_selectedFolder.getItemCount() - 1) {
 			j++;
-			stringBuilder.append(selectedFolder_show_1.getItemAt(j) + "?");
+			stringBuilder.append(StartFolder_selectedFolder.getItemAt(j) + "?");
 		}
 		try (PrintWriter out = new PrintWriter("Saved_Files/DemokassenSave.txt")) {
 			// stringBuilder.setLength(stringBuilder.length() - 1);
@@ -1776,9 +1649,9 @@ public class __MainFrame extends JFrame {
 		// 2 Dropdown für das auswählen des DEP Files
 		int j1 = -1;
 		StringBuilder stringBuilder1 = new StringBuilder();
-		while (j1 < selectedFolder_show_2.getItemCount() - 1) {
+		while (j1 < DEP_selectedFolder.getItemCount() - 1) {
 			j1++;
-			stringBuilder1.append(selectedFolder_show_2.getItemAt(j1) + "?");
+			stringBuilder1.append(DEP_selectedFolder.getItemAt(j1) + "?");
 		}
 		try (PrintWriter out = new PrintWriter("Saved_Files/DEPFileSave.txt")) {
 			// stringBuilder1.setLength(stringBuilder.length() - 1);
@@ -1792,9 +1665,9 @@ public class __MainFrame extends JFrame {
 		// 4 Dropdown für das auswählen des QR Files
 		int j3 = -1;
 		StringBuilder stringBuilder3 = new StringBuilder();
-		while (j3 < selectedFolder_show_4.getItemCount() - 1) {
+		while (j3 < QR_selectedFolder.getItemCount() - 1) {
 			j3++;
-			stringBuilder3.append(selectedFolder_show_4.getItemAt(j3) + "?");
+			stringBuilder3.append(QR_selectedFolder.getItemAt(j3) + "?");
 		}
 		try (PrintWriter out = new PrintWriter("Saved_Files/QRFileSave.txt")) {
 			// stringBuilder1.setLength(stringBuilder.length() - 1);
@@ -1806,9 +1679,9 @@ public class __MainFrame extends JFrame {
 		}
 		int j4 = -1;
 		StringBuilder stringBuilder4 = new StringBuilder();
-		while (j4 < selectedFolder_show_5.getItemCount() - 1) {
+		while (j4 < Crypto_selectedFolder.getItemCount() - 1) {
 			j4++;
-			stringBuilder4.append(selectedFolder_show_5.getItemAt(j4) + "?");
+			stringBuilder4.append(Crypto_selectedFolder.getItemAt(j4) + "?");
 		}
 		try (PrintWriter out = new PrintWriter("Saved_Files/CryptoFileSave.txt")) {
 			// stringBuilder1.setLength(stringBuilder.length() - 1);
@@ -1833,7 +1706,7 @@ public class __MainFrame extends JFrame {
 			String everything = IOUtils.toString(inputStream);
 			String[] parts = everything.split("\\?");
 			for (int i = 0; (parts.length - 1) > i; i++) {
-				selectedFolder_show_1.addItem(parts[i]);
+				StartFolder_selectedFolder.addItem(parts[i]);
 			}
 			// String part1 = parts[0]; // 004
 			// String part2 = parts[1]; // 034556
@@ -1848,7 +1721,7 @@ public class __MainFrame extends JFrame {
 			String everything = IOUtils.toString(inputStream2);
 			String[] parts = everything.split("\\?");
 			for (int i = 0; (parts.length - 1) > i; i++) {
-				selectedFolder_show_2.addItem(parts[i]);
+				DEP_selectedFolder.addItem(parts[i]);
 			}
 			// String part1 = parts[0]; // 004
 			// String part2 = parts[1]; // 034556
@@ -1863,7 +1736,7 @@ public class __MainFrame extends JFrame {
 			String everything = IOUtils.toString(inputStream3);
 			String[] parts = everything.split("\\?");
 			for (int i = 0; (parts.length - 1) > i; i++) {
-				selectedFolder_show_5.addItem(parts[i]);
+				Crypto_selectedFolder.addItem(parts[i]);
 			}
 		} finally {
 			inputStream3.close();
@@ -1876,7 +1749,7 @@ public class __MainFrame extends JFrame {
 			String everything = IOUtils.toString(inputStream4);
 			String[] parts = everything.split("\\?");
 			for (int i = 0; (parts.length - 1) > i; i++) {
-				selectedFolder_show_4.addItem(parts[i]);
+				QR_selectedFolder.addItem(parts[i]);
 			}
 		} finally {
 			inputStream4.close();
@@ -1889,7 +1762,7 @@ public class __MainFrame extends JFrame {
 			String everything = IOUtils.toString(inputStream5);
 			String[] parts = everything.split("\\?");
 			for (int i = 0; (parts.length - 1) > i; i++) {
-				selectedFolder_output.addItem(parts[i]);
+				OutputFolder_selectedFolder.addItem(parts[i]);
 			}
 		} finally {
 			inputStream5.close();
@@ -1917,35 +1790,37 @@ public class __MainFrame extends JFrame {
 	
 	
 	//Item Listener der auf das 1. ItemSelect schaut und den Start ordner Wechselt wenn ein neues File ausgewählt wurde
-	
-	class ItemChangeListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent arg0) {
-			if (arg0.getStateChange() == ItemEvent.SELECTED) {
-		          Object item = arg0.getItem();
-		          // do something with object
-		          defaultFolerOpen= item.toString();
-		          File f = new File(defaultFolerOpen+"\\output");
-		          if (!f.exists() && !f.isDirectory()){
-			          try {
-							Files.createDirectory(Paths.get(defaultFolerOpen+"\\output"));
-						} catch (IOException e) {
-							System.out.println("Output Folder already exists");
-							e.printStackTrace();
-						}
-						
-						if (((DefaultComboBoxModel) selectedFolder_output.getModel()).getIndexOf("" + defaultFolerOpen + "\\output") == -1) {
-							selectedFolder_output.addItem("" + defaultFolerOpen + "\\output");
-							selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
-							if (selectedFolder_output.getItemCount() > 10) {
-								selectedFolder_output.removeItemAt(0);
-							}
-						} else {
-							selectedFolder_output.setSelectedItem("" + defaultFolerOpen + "\\output");
-						}
-			       }
-			}
+	class NewOrderItemListenerDefaultFolder implements ActionListener{
+		public void actionPerformed(ActionEvent arg1) {
+			  JComboBox<String> box = (JComboBox)arg1.getSource();
+	          String choosenString=(String)box.getSelectedItem();
+	          File f = new File(choosenString);
+	          if (f.exists()){
+	        	  box.removeItem(choosenString);
+	        	  box.insertItemAt(choosenString,0);
+	        	  box.setSelectedIndex(0);
+	        	  defaultFolerOpen= choosenString;
+	          }else{
+	        	  box.removeItem(choosenString);
+	        	  System.out.println("Deleted Choosen DropDown enty cause it does not exist !");
+	          }
+		         
+		         
+		}       
+	}
+	class NewOrderItemListener implements ActionListener{
+		public void actionPerformed(ActionEvent arg1) {
+		          JComboBox<String> box = (JComboBox)arg1.getSource();
+		          String choosenString=(String)box.getSelectedItem();
+		          File f = new File(choosenString);
+		          if (f.exists()){
+		        	  box.removeItem(choosenString);
+		        	  box.insertItemAt(choosenString,0);
+		        	  box.setSelectedIndex(0);
+		          }else{
+		        	  box.removeItem(choosenString);
+		        	  System.out.println("Deleted Choosen DropDown enty cause it does not exist !");
+		          }
 		}       
 	}
 

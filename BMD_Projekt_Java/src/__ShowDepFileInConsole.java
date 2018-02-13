@@ -265,40 +265,34 @@ public class __ShowDepFileInConsole{
 		System.out.println(text+" ="+countimer+":" + timer);*/
 	}
 	//Run DEP-Test
-	public String runDepTest(String DefaultStringDEP, String DefaultStringCRYPTO, Boolean futurBox, String outputFile){
+	public String runDepTest(String DefaultStringDEP, String DefaultStringCRYPTO, boolean futurBox, String outputFile,boolean DetailsBox){
 		StringBuilder outputstring = new StringBuilder();
-		
 		Runtime runtime = Runtime.getRuntime();
 		Process process = null;
-			try {
-				if(outputFile!=null){
-					File file = new File(outputFile);
-					if(file.isDirectory()==true){
-						if(futurBox==true){
-							process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+outputFile);
-						}else{
-						process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o "+outputFile);
-						}
-					}else{
-						if(futurBox==true){
-							process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-						}else{
-							process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-						}
-						
-					}
-				}else{
-					if(futurBox==true){
-						process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -f -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-					}else{
-						process = runtime.exec("java -Xmx1500m -jar regkassen-verification-depformat-1.0.0.jar -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o OutputFiles");
-					}
-				}
-				
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} // you might need the full path
+		String proString="java -Xmx1500m -jar regkassen-verification-depformat-1.1.0.jar";
+		if(futurBox==true){
+			proString+=" -f";
+		}
+		if(DetailsBox==true){
+			proString+=" -v";
+		}
+		proString +=" -i " + DefaultStringDEP + " -c " + DefaultStringCRYPTO+" -o ";
+		if(outputFile!=null){
+			File file = new File(outputFile);
+			if(file.isDirectory()==true){
+				proString+=outputFile;
+			}
+			else{
+				proString+="OutputFiles";
+			}
+		}
+		
+		try {
+			process=runtime.exec(proString);
+		} catch (IOException e2) {
+			System.out.println("Error while calling regkassen-verification-depformat-1.1.0.jar on __ShowDEPFileInConsole.java on Line 290");
+			e2.printStackTrace();
+		}
 			InputStream is = process.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
@@ -324,7 +318,7 @@ public class __ShowDepFileInConsole{
 								whileFlag = whileFlag + 105;
 								lineCounter = lineCounter - 105;
 							}
-							outputstring.append(line.substring(whileFlag, line.length()));
+							outputstring.append(line.substring(whileFlag, line.length()) + "\r\n");
 						} else {
 							outputstring.append(line + "\r\n");
 						}

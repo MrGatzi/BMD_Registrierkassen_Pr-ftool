@@ -95,7 +95,7 @@ public class __MainFrame extends JFrame {
 		contentPane = (JPanel) getContentPane();
 		contentPane.setLayout(new GridLayout(2, 1));
 		setSize(new Dimension(1000, 800));
-		setTitle("Registrierkassen Testsystem");
+		setTitle("Registrierkassen Testsystem for advanced DEP-Tests");
 
 		JPanel CP_CenterGrid_Flow_1_1 = new JPanel(new BorderLayout());
 		JPanel CP_CenterGrid_Flow_1_1_north = new JPanel(new FlowLayout());
@@ -141,18 +141,18 @@ public class __MainFrame extends JFrame {
 		CP_CenterGrid_Flow_1_1_center.add(selectDep);
 
 		JButton run = new JButton();
-		run.setText("Go Dep_Test");
+		run.setText("with DEP-Test");
 		run runA = new run();
 		run.addActionListener(runA);
 		CP_CenterGrid_Flow_1_1_south.add(run);
-		run.setPreferredSize(new Dimension(100, 100));
+		run.setPreferredSize(new Dimension(150, 100));
 		
 		JButton run2 = new JButton();
-		run2.setText("Go no Test");
+		run2.setText("without DEP-Test");
 		run2 runA2 = new run2();
 		run2.addActionListener(runA2);
 		CP_CenterGrid_Flow_1_1_south.add(run2);
-		run2.setPreferredSize(new Dimension(100, 100));
+		run2.setPreferredSize(new Dimension(150, 100));
 
 		CP_CenterGrid_Flow_1_1.add(CP_CenterGrid_Flow_1_1_center, BorderLayout.CENTER);
 		CP_CenterGrid_Flow_1_1.add(CP_CenterGrid_Flow_1_1_north, BorderLayout.NORTH);
@@ -285,11 +285,11 @@ public class __MainFrame extends JFrame {
 					Outputarea.append("Writing File " + (forcounter + 1) + "\r\n");
 					Outputarea.update(Outputarea.getGraphics());
 					lineNr = 0;
-					file = new File(OutFolder+"/Dep_" + (forcounter + 1)
+					file = new File(OutFolder+"/_Dep_" + (forcounter + 1)
 							+ ".json");
 					file.createNewFile();
 					writer = new BufferedWriter(new FileWriter(file));
-					file2 = new File(OutFolder+"/OUT_"
+					file2 = new File(OutFolder+"/_OUT_"
 							+ (forcounter + 1) + ".txt");
 					file2.createNewFile();
 					writer2 = new BufferedWriter(new FileWriter(file2));
@@ -395,12 +395,12 @@ public class __MainFrame extends JFrame {
 					forcounterDep++;
 					Outputarea.append("Running Dep-Tests for File :" + (forcounterDep) + "\r\n");
 					Outputarea.update(Outputarea.getGraphics());
-					fileDep = new File(OutFolder+"/DepTest_"+ (forcounterDep) + ".json");
+					fileDep = new File(OutFolder+"/_DepTest_"+ (forcounterDep) + ".json");
 					fileDep.createNewFile();
 					writerDep = new BufferedWriter(new FileWriter(fileDep));
 					Runtime runtime = Runtime.getRuntime();
 					Process process = null;
-					process = runtime.exec("java -jar regkassen-verification-depformat-1.0.0.jar -i "+OutFolder+"/Dep_"+ (forcounterDep) + ".json" + " -c " + CryptoFile + " -o OutputFiles");
+					process = runtime.exec("java -jar regkassen-verification-depformat-1.1.0.jar -v -f -i "+OutFolder+"/_Dep_"+ (forcounterDep) + ".json" + " -c " + CryptoFile + " -o "+OutFolder);
 					InputStream is = process.getInputStream();
 					InputStreamReader isr = new InputStreamReader(is);
 					BufferedReader brDep = new BufferedReader(isr);
@@ -410,7 +410,7 @@ public class __MainFrame extends JFrame {
 					}
 					writerDep.flush();
 					writerDep.close();
-					Outputarea.append("Closed File : Dep_" + (forcounterDep) + "\r\n\r\n");
+					Outputarea.append("Closed File : _Dep_" + (forcounterDep) + "\r\n\r\n");
 					Outputarea.update(Outputarea.getGraphics());
 				}
 			} catch (IOException e) {
@@ -484,11 +484,11 @@ public class __MainFrame extends JFrame {
 					Outputarea.append("Writing File " + (forcounter + 1) + "\r\n");
 					Outputarea.update(Outputarea.getGraphics());
 					lineNr = 0;
-					file = new File(OutFolder+"/Dep_" + (forcounter + 1)
+					file = new File(OutFolder+"/_Dep_" + (forcounter + 1)
 							+ ".json");
 					file.createNewFile();
 					writer = new BufferedWriter(new FileWriter(file));
-					file2 = new File(OutFolder+"/OUT_"
+					file2 = new File(OutFolder+"/_OUT_"
 							+ (forcounter + 1) + ".txt");
 					file2.createNewFile();
 					writer2 = new BufferedWriter(new FileWriter(file2));
