@@ -10,6 +10,7 @@ import java.io.*;
 import java.math.BigInteger;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -17,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.nio.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,14 +144,14 @@ public class __MainFrame extends JFrame {
 
 		JButton run = new JButton();
 		run.setText("with DEP-Test");
-		run runA = new run();
+		runWithDEP runA = new runWithDEP();
 		run.addActionListener(runA);
 		CP_CenterGrid_Flow_1_1_south.add(run);
 		run.setPreferredSize(new Dimension(150, 100));
 		
 		JButton run2 = new JButton();
 		run2.setText("without DEP-Test");
-		run2 runA2 = new run2();
+		runNoDEP runA2 = new runNoDEP();
 		run2.addActionListener(runA2);
 		CP_CenterGrid_Flow_1_1_south.add(run2);
 		run2.setPreferredSize(new Dimension(150, 100));
@@ -164,6 +166,8 @@ public class __MainFrame extends JFrame {
 		Outputarea.setLineWrap(true);
 		Outputarea.setWrapStyleWord(true);
 		Outputarea.setColumns(10);
+		DefaultCaret caret = (DefaultCaret)Outputarea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		ScrollBar = new JScrollPane(Outputarea);
 		ScrollBar.setPreferredSize(new Dimension(400, 300));
@@ -223,7 +227,7 @@ public class __MainFrame extends JFrame {
 		}
 	}
 
-	private class run implements ActionListener {
+	private class runWithDEP implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			Outputarea.setText("Init\r\n");
 			Outputarea.update(Outputarea.getGraphics());
@@ -260,6 +264,7 @@ public class __MainFrame extends JFrame {
 				e.printStackTrace();
 			}
 			Outputarea.append("DEP-Exporte found : " + firstDepLines.size() + "\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 			Outputarea.update(Outputarea.getGraphics());
 			// System.out.println("ms:" + (System.currentTimeMillis() -
 			// Starttime) + "| " + lineNr);
@@ -272,6 +277,7 @@ public class __MainFrame extends JFrame {
 				e1.printStackTrace();
 			}
 			Outputarea.append("Dep-Exports ordered\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 			Outputarea.update(Outputarea.getGraphics());
 			try {
 				File file;
@@ -283,6 +289,7 @@ public class __MainFrame extends JFrame {
 
 				for (String element : orderdFirstDepLines) {
 					Outputarea.append("Writing File " + (forcounter + 1) + "\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 					lineNr = 0;
 					file = new File(OutFolder+"/_Dep_" + (forcounter + 1)
@@ -361,6 +368,7 @@ public class __MainFrame extends JFrame {
 					}else{
 						Outputarea.append("Dep-Tests for File :" + (forcounter+1) + "  -> Umsatzzähler nicht korrekt\r\n");
 					};
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 					umsatzählerAltS = 0;
 					elementsUsedS = 0;
@@ -375,6 +383,7 @@ public class __MainFrame extends JFrame {
 					writer2.flush();
 					writer2.close();
 					Outputarea.append("Closed File " + (forcounter) + "\r\n\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 
 				}
@@ -388,29 +397,41 @@ public class __MainFrame extends JFrame {
 				
 				Outputarea.update(Outputarea.getGraphics());
 				Outputarea.append("Running Dep-Tests \r\n");
+				Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 				Outputarea.update(Outputarea.getGraphics());
 				int forcounterDep = 0;
 				BufferedWriter writerDep;
 				for (String element1 : orderdFirstDepLines) {
+					
 					forcounterDep++;
 					Outputarea.append("Running Dep-Tests for File :" + (forcounterDep) + "\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
+					contentPane.repaint();
 					fileDep = new File(OutFolder+"/_DepTest_"+ (forcounterDep) + ".json");
 					fileDep.createNewFile();
 					writerDep = new BufferedWriter(new FileWriter(fileDep));
 					Runtime runtime = Runtime.getRuntime();
 					Process process = null;
-					process = runtime.exec("java -jar regkassen-verification-depformat-1.1.0.jar -v -f -i "+OutFolder+"/_Dep_"+ (forcounterDep) + ".json" + " -c " + CryptoFile + " -o "+OutFolder);
+					process = runtime.exec("java -jar regkassen-verification-depformat-1.1.1.jar -f -i "+OutFolder+"/_Dep_"+ (forcounterDep) + ".json" + " -c " + CryptoFile + " -o "+OutFolder+"/out");
 					InputStream is = process.getInputStream();
 					InputStreamReader isr = new InputStreamReader(is);
 					BufferedReader brDep = new BufferedReader(isr);
 					String lineDep;
-					while ((lineDep = brDep.readLine()) != null) {
+					while ((lineDep = brDep.readLine()) != null) {	
 						writerDep.write(lineDep+"\r\n");
+						System.out.println(lineDep);
+						if(lineDep.contains("Step 2: RKSV-DEP-EXPORT Validation:")){
+							process.destroy();
+							writerDep.write("NOT DONE ! \r\n");
+							System.out.println("stopped Process on Step 2 !");
+						}
+						
 					}
 					writerDep.flush();
 					writerDep.close();
 					Outputarea.append("Closed File : _Dep_" + (forcounterDep) + "\r\n\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 				}
 			} catch (IOException e) {
@@ -418,13 +439,15 @@ public class __MainFrame extends JFrame {
 				e.printStackTrace();
 			}
 			Outputarea.append("Done\r\n");
+			
 
 		}
 
 	}
-	private class run2 implements ActionListener {
+	private class runNoDEP implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			Outputarea.setText("Init\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 			Outputarea.update(Outputarea.getGraphics());
 			System.out.println("s");
 			long Starttime = System.currentTimeMillis();
@@ -459,6 +482,7 @@ public class __MainFrame extends JFrame {
 				e.printStackTrace();
 			}
 			Outputarea.append("DEP-Exporte found : " + firstDepLines.size() + "\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 			Outputarea.update(Outputarea.getGraphics());
 			// System.out.println("ms:" + (System.currentTimeMillis() -
 			// Starttime) + "| " + lineNr);
@@ -471,6 +495,7 @@ public class __MainFrame extends JFrame {
 				e1.printStackTrace();
 			}
 			Outputarea.append("Dep-Exports ordered\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 			Outputarea.update(Outputarea.getGraphics());
 			try {
 				File file;
@@ -482,6 +507,7 @@ public class __MainFrame extends JFrame {
 
 				for (String element : orderdFirstDepLines) {
 					Outputarea.append("Writing File " + (forcounter + 1) + "\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 					lineNr = 0;
 					file = new File(OutFolder+"/_Dep_" + (forcounter + 1)
@@ -560,6 +586,7 @@ public class __MainFrame extends JFrame {
 					}else{
 						Outputarea.append("Dep-Tests for File :" + (forcounter+1) + "  -> Umsatzzähler nicht korrekt\r\n");
 					};
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					umsatzählerAltS = 0;
 					elementsUsedS = 0;
 					rightchainS = 0;
@@ -573,6 +600,7 @@ public class __MainFrame extends JFrame {
 					writer2.flush();
 					writer2.close();
 					Outputarea.append("Closed File " + (forcounter) + "\r\n\r\n");
+					Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 					Outputarea.update(Outputarea.getGraphics());
 
 				}
@@ -582,6 +610,7 @@ public class __MainFrame extends JFrame {
 				e.printStackTrace();
 			}
 			Outputarea.append("Done\r\n");
+			Outputarea.setCaretPosition(Outputarea.getDocument().getLength());
 
 		}
 
