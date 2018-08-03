@@ -89,9 +89,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
-
         super.onCreate(savedInstanceState);
-
+        //test to show github
         setContentView(R.layout.activity_main);
 
 
