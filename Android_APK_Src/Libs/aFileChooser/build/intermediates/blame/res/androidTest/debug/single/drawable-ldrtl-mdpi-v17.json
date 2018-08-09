@@ -1,26 +1,14 @@
 [
     {
-        "merged": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png",
-        "source": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png"
+        "merged": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "C:\\Users\\flori\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-24.1.1.aar\\69ca2c1406b1a7acab213e388201dc22\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png"
     },
     {
-        "merged": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png",
-        "source": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png"
+        "merged": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png",
+        "source": "C:\\Users\\flori\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-24.1.1.aar\\69ca2c1406b1a7acab213e388201dc22\\res\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png"
     },
     {
-        "merged": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png",
-        "source": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png"
-    },
-    {
-        "merged": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png",
-        "source": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png"
-    },
-    {
-        "merged": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png",
-        "source": "C:\\Users\\gat451\\AndroidStudioProjects\\aFileChooser_die5te\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_cut_mtrl_alpha.png"
-    },
-    {
-        "merged": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png",
-        "source": "C:\\Users\\Martin\\Desktop\\BMD_Daten\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.1.1\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png"
+        "merged": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "C:\\Users\\flori\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-24.1.1.aar\\69ca2c1406b1a7acab213e388201dc22\\res\\drawable-ldrtl-mdpi-v17\\abc_ic_menu_copy_mtrl_am_alpha.png"
     }
 ]

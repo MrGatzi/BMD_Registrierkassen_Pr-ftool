@@ -1,0 +1,72 @@
+{
+    "logs": [
+        {
+            "outputFile": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-v11\\values-v11.xml",
+            "map": [
+                {
+                    "source": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\bundles\\debug\\res\\values-v11\\values-v11.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "53",
+                        "endOffsets": "104"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\flori\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-24.1.1.aar\\69ca2c1406b1a7acab213e388201dc22\\res\\values-v11\\values-v11.xml",
+                    "from": {
+                        "startLines": "2,8,14,20,26,32,38,39,40,41,46,51,56,58,60,61,62,111,161",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,474,899,1327,1753,2180,2605,2694,2795,2898,3306,3726,4148,4255,4384,4455,4538,8153,11908",
+                        "endLines": "7,13,19,25,31,37,38,39,40,45,50,55,57,59,60,61,110,160,161",
+                        "endColumns": "12,12,12,12,12,12,88,100,102,12,12,12,12,12,70,82,12,12,90",
+                        "endOffsets": "469,894,1322,1748,2175,2600,2689,2790,2893,3301,3721,4143,4250,4379,4450,4533,8148,11903,11994"
+                    },
+                    "to": {
+                        "startLines": "3,9,15,21,27,33,39,40,41,42,47,52,57,59,61,62,63,112,162",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "109,528,953,1381,1807,2234,2659,2748,2849,2952,3360,3780,4202,4309,4438,4509,4592,8207,11962",
+                        "endLines": "8,14,20,26,32,38,39,40,41,46,51,56,58,60,61,62,111,161,162",
+                        "endColumns": "12,12,12,12,12,12,88,100,102,12,12,12,12,12,70,82,12,12,90",
+                        "endOffsets": "523,948,1376,1802,2229,2654,2743,2844,2947,3355,3775,4197,4304,4433,4504,4587,8202,11957,12048"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-v11\\values-v11.xml",
+            "map": [
+                {
+                    "source": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\bundles\\debug\\res\\values-v11\\values-v11.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "53",
+                        "endOffsets": "104"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\flori\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-24.1.1.aar\\69ca2c1406b1a7acab213e388201dc22\\res\\values-v11\\values-v11.xml",
+                    "from": {
+                        "startLines": "2,8,14,20,26,32,38,39,40,41,46,51,56,58,60,61,62,111,161",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,474,899,1327,1753,2180,2605,2694,2795,2898,3306,3726,4148,4255,4384,4455,4538,8153,11908",
+                        "endLines": "7,13,19,25,31,37,38,39,40,45,50,55,57,59,60,61,110,160,161",
+                        "endColumns": "12,12,12,12,12,12,88,100,102,12,12,12,12,12,70,82,12,12,90",
+                        "endOffsets": "469,894,1322,1748,2175,2600,2689,2790,2893,3301,3721,4143,4250,4379,4450,4533,8148,11903,11994"
+                    },
+                    "to": {
+                        "startLines": "3,9,15,21,27,33,39,40,41,42,47,52,57,59,61,62,63,112,162",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "109,528,953,1381,1807,2234,2659,2748,2849,2952,3360,3780,4202,4309,4438,4509,4592,8207,11962",
+                        "endLines": "8,14,20,26,32,38,39,40,41,46,51,56,58,60,61,62,111,161,162",
+                        "endColumns": "12,12,12,12,12,12,88,100,102,12,12,12,12,12,70,82,12,12,90",
+                        "endOffsets": "523,948,1376,1802,2229,2654,2743,2844,2947,3355,3775,4197,4304,4433,4504,4587,8202,11957,12048"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-ga\\values-ga.xml",
+            "map": [
+                {
+                    "source": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\bundles\\debug\\res\\values-ga\\values-ga.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,112,175,266",
+                        "endColumns": "56,62,90,91",
+                        "endOffsets": "107,170,261,353"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-ga\\values-ga.xml",
+            "map": [
+                {
+                    "source": "E:\\Users\\OLF399\\Desktop\\BMD_Registrierkassen_Prueftool_Src\\Android_APK_Src\\Libs\\aFileChooser\\build\\intermediates\\bundles\\debug\\res\\values-ga\\values-ga.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,112,175,266",
+                        "endColumns": "56,62,90,91",
+                        "endOffsets": "107,170,261,353"
+                    }
+                }
+            ]
+        }
+    ]
+}
