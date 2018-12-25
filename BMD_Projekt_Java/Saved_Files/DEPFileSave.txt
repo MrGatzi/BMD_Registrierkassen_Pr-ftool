@@ -1,1 +1,1 @@
-D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_2\dep-export.json?D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_1\dep-export.json?D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_5\dep-export.json?D:\BMD\Tests\TESTSUITE_TEST_SZENARIO_4\dep-export.json?
+C:\Users\Martin Gatzweiler\Desktop\BMD_tests\20180101-20180531_POS0004.json?

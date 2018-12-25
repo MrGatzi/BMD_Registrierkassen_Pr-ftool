@@ -69,6 +69,7 @@ public class __MainFrame extends JFrame {
 	JCheckBox Filter; // JCheckBox um die Fehler anzuzeigen, funktioniert wie
 	JCheckBox FutureCheckboxDEP;				// ein Button
 	JCheckBox DetailsCheckboxDEP;	
+	JCheckBox StartvalueCheckboxDEP;
 	JCheckBox FutureCheckboxQR;				// ein Button
 	JCheckBox DetailsCheckboxQR;	
 	String DefaultString = "C:/Users/"; // Default String wenn kein Ordner
@@ -254,6 +255,8 @@ public class __MainFrame extends JFrame {
 		CP_CenterGrid_Border_1_2_Flow_South.add(FutureCheckboxDEP);
 		DetailsCheckboxDEP = new JCheckBox("Details");
 		CP_CenterGrid_Border_1_2_Flow_South.add(DetailsCheckboxDEP);
+		StartvalueCheckboxDEP = new JCheckBox("Startbeleg nicht enthalten");
+		CP_CenterGrid_Border_1_2_Flow_South.add(StartvalueCheckboxDEP);
 		
 		
 		// CenterPart of the CP_CenterGrid_Border_1_2
@@ -623,7 +626,7 @@ public class __MainFrame extends JFrame {
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
 			
-			String outputDepFile =DepFunction.show(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString());
+			String outputDepFile =DepFunction.show(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString(),StartvalueCheckboxDEP.isSelected());
 			//int count =  // commons-lang3-3.6.jar in /lib
 			Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
 			Outputarea.setText(outputDepFile);

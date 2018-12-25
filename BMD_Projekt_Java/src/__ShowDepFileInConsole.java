@@ -11,6 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
+import java.util.regex.*;  
 
 import org.apache.commons.codec.binary.Base64;
 //classe die das auslesen, umrechnen und ausgeben der DEP-Files übernimmt
@@ -33,8 +34,7 @@ public class __ShowDepFileInConsole{
 	int flagControllS=0;
 	int elementsUsedS=0;
 	//Ausgabe eines DEP-Files mit genau einem DEP-Export.
-	public String show(String show_2, String show_5) {
-		startimer=System.currentTimeMillis();
+	public String show(String show_2, String show_5,boolean Startbelegflag) {
 		StringBuilder outputstring = new StringBuilder();
 		try {
 			DecimalFormat df = new DecimalFormat("#.##");
@@ -47,16 +47,18 @@ public class __ShowDepFileInConsole{
 			double umsatzählerAlt =0;
 			int wrongchain=0;
 			int rightchain=0;
+			int wrongCentValueCounter=0;
+			int wrongCentValue=0;
+			boolean wrongCentValueFlag=false;
+			boolean dateFlag=false;
+			int dateCounter=0;
 			int FlagControll=0;
-			//Outputarea.setText("DEP_FILE:");
-			outputstring.append("DEP_FILE:");
-			//String DEP = Readtxt(selectedFolder_show_2.getSelectedItem().toString());
-			String DEP = read.Readtxt(show_2);
-			String FlagSignatur="";
 			int indexPrüf=0;
 			int forcounter=0;
+			outputstring.append("DEP_FILE:");
+			String DEP = read.Readtxt(show_2);
+			String FlagSignatur="";
 			indexPrüf = DEP.indexOf("Belege-kompakt");			
-			timer("Read text");
 			while (indexPrüf>-1) {
 				DEP=DEP.substring(indexPrüf, DEP.length());
 				String DEP2 = DEP.substring(DEP.indexOf("["), DEP.indexOf("]"));
@@ -77,7 +79,6 @@ public class __ShowDepFileInConsole{
 					int Flag2 = 0;
 					String KassenID = "";
 					String BelegID = "";
-					//Outputarea.append("\r\nBeleg : "+i);
 					outputstring.append("\r\nBeleg : "+i);
 					while (Flag2 < parts2.length) {
 						if (Flag2 == 2) {
@@ -86,8 +87,17 @@ public class __ShowDepFileInConsole{
 						if (Flag2 == 3) {
 							BelegID = parts2[Flag2];
 						}
+						if(Flag2==4) {
+							dateFlag = Pattern.matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d", parts2[Flag2]);
+							
+						}
 						if (Flag2 == 5) {
+							
 							String flag = parts2[Flag2].replaceAll("\\.", "");
+							if(flag.substring(flag.lastIndexOf(",") + 1).length()>2) {
+								wrongCentValueCounter++;
+								wrongCentValueFlag=true;
+							}
 							flag = flag.replaceAll(",", "");
 							BigInteger numBig = new BigInteger(flag);
 							umsatzähler1 =numBig.doubleValue();
@@ -95,6 +105,10 @@ public class __ShowDepFileInConsole{
 						}
 						if (Flag2 == 6) {
 							String flag = parts2[Flag2].replaceAll("\\.", "");
+							if(flag.substring(flag.lastIndexOf(",") + 1).length()>2) {
+								wrongCentValueCounter++;
+								wrongCentValueFlag=true;
+							}
 							flag = flag.replaceAll(",", "");
 							BigInteger numBig = new BigInteger(flag);
 							umsatzähler2 =numBig.doubleValue(); 
@@ -102,6 +116,10 @@ public class __ShowDepFileInConsole{
 						}
 						if (Flag2 == 7) {
 							String flag = parts2[Flag2].replaceAll("\\.", "");
+							if(flag.substring(flag.lastIndexOf(",") + 1).length()>2) {
+								wrongCentValueCounter++;
+								wrongCentValueFlag=true;
+							}
 							flag = flag.replaceAll(",", "");
 							BigInteger numBig = new BigInteger(flag);
 							umsatzähler3 = numBig.doubleValue();
@@ -109,6 +127,10 @@ public class __ShowDepFileInConsole{
 						}
 						if (Flag2 == 8) {
 							String flag = parts2[Flag2].replaceAll("\\.", "");
+							if(flag.substring(flag.lastIndexOf(",") + 1).length()>2) {
+								wrongCentValueCounter++;
+								wrongCentValueFlag=true;
+							}
 								flag = flag.replaceAll(",", "");
 								BigInteger numBig = new BigInteger(flag);
 							umsatzähler4 = numBig.doubleValue();
@@ -116,11 +138,13 @@ public class __ShowDepFileInConsole{
 						}
 						if (Flag2 == 9) {
 							String flag = parts2[Flag2].replaceAll("\\.", "");
+							if(flag.substring(flag.lastIndexOf(",") + 1).length()>2) {
+								wrongCentValueCounter++;
+								wrongCentValueFlag=true;
+							}
 							flag = flag.replaceAll(",", "");
 							BigInteger numBig = new BigInteger(flag);
 							umsatzähler5 = numBig.doubleValue();
-							/*umsatzähler5= (double) flag;
-							umsatzähler5=Math.round(umsatzähler5*100);*/
 						}
 						if (Flag2 == 10) {
 							outputstring.append("Stand-Umsatz-Zaehler-AES256-ICM_Verschlüsselt: " + parts2[Flag2] + "   \r\n");
@@ -141,7 +165,6 @@ public class __ShowDepFileInConsole{
 								
 							} else {
 								
-								//long i1 = CalcNewValue(KassenID, BelegID, parts2[Flag2],selectedFolder_show_5.getSelectedItem().toString());
 								long i1 = code.CalcNewValue(KassenID, BelegID, parts2[Flag2],show_5);
 								double d = (double) i1;
 								double dflag = d / 100;
@@ -153,9 +176,15 @@ public class __ShowDepFileInConsole{
 									rightchain++;
 									outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: " + (umsatzählerSoll/100) + " €\r\n");
 								}else{
-             						wrongchain++;
-             						umsatzählerAlt=d;
-									outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: FEHLER \r\n");
+									if(forcounter == 0 && Startbelegflag){
+										rightchain++;
+										umsatzählerAlt=d;
+										outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: " + dflag + " €\r\n");
+									}else{
+										wrongchain++;
+										umsatzählerAlt=d;
+										outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: FEHLER \r\n");
+									}
 								}
 								
 							}
@@ -164,9 +193,11 @@ public class __ShowDepFileInConsole{
 							
 						}
 						Flag2++;
-						//Outputarea.setRows(Outputarea.getRows() + 2);
 					}
-					if (forcounter == 0) {
+					if(forcounter == 0 && Startbelegflag){
+						FlagControll++;
+					}
+					if (forcounter == 0 && !Startbelegflag) {
 						
 						MessageDigest md = MessageDigest.getInstance("sha-256");
 
@@ -231,7 +262,6 @@ public class __ShowDepFileInConsole{
 					byte[] Sig_Nae_Beleg = Base64.encodeBase64(conDigest1, false);
 					String Sig_Nae_Beleg_String = new String(Sig_Nae_Beleg, "UTF-8");
 					outputstring.append("Sig_Nächster_Beleg_Calculated: " + Sig_Nae_Beleg_String + "\r\n");
-					timer("sig-berech-ende");
 					
 					FlagSignatur = parts[i];
 					if (!parts4.toString().equals("NOT VALID")) {
@@ -240,14 +270,21 @@ public class __ShowDepFileInConsole{
 						String PartString1 = new String(encodedBytes, "UTF-8");
 						outputstring.append("Signatur: " + PartString1 + "\r\n");
 					}
-
+					if(wrongCentValueFlag) {
+						wrongCentValueFlag=false;
+						wrongCentValue++;
+					}
 					forcounter++;
-					
+					if(!dateFlag) {
+						outputstring.append("Datum: FEHLER\r\n");
+						dateCounter++;
+					}
 				}
 			}
-			outputstring.append("Listen Elemente: "+ forcounter +" , davon richtig verkettet:"+ FlagControll +" \r\n");
+			outputstring.append("\r\nListen Elemente: "+ forcounter +" , davon richtig verkettet:"+ FlagControll +" \r\n");
 			outputstring.append("Berechnete Umsatzzähler: "+ (rightchain+wrongchain) +" , davon richtig verkettet:"+ rightchain +" \r\n");
-			//timer("updaten");
+			outputstring.append("Belege mit falschen Betragsspalten: "+ wrongCentValue +" (insgesamt falsche Spalten: "+wrongCentValueCounter+" ) \r\n");
+			outputstring.append("Belege mit falschem Datum: "+ dateCounter +" \r\n");
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -259,17 +296,12 @@ public class __ShowDepFileInConsole{
 		return outputstring.toString();
 		//Outputarea.setCaretPosition(0);
 	}
-	private void timer(String text){
-		/*countimer++;
-		timer = (System.currentTimeMillis()- startimer)-timer;
-		System.out.println(text+" ="+countimer+":" + timer);*/
-	}
 	//Run DEP-Test
 	public String runDepTest(String DefaultStringDEP, String DefaultStringCRYPTO, boolean futurBox, String outputFile,boolean DetailsBox){
 		StringBuilder outputstring = new StringBuilder();
 		Runtime runtime = Runtime.getRuntime();
 		Process process = null;
-		String proString="java -Xmx1500m -jar regkassen-verification-depformat-1.1.0.jar";
+		String proString="java -Xmx1500m -jar regkassen-verification-depformat-1.1.1.jar";
 		if(futurBox==true){
 			proString+=" -f";
 		}
@@ -290,7 +322,7 @@ public class __ShowDepFileInConsole{
 		try {
 			process=runtime.exec(proString);
 		} catch (IOException e2) {
-			System.out.println("Error while calling regkassen-verification-depformat-1.1.0.jar on __ShowDEPFileInConsole.java on Line 290");
+			System.out.println("Error while calling regkassen-verification-depformat-1.1.1.jar on __ShowDEPFileInConsole.java on Line 290");
 			e2.printStackTrace();
 		}
 			InputStream is = process.getInputStream();
@@ -637,7 +669,6 @@ public class __ShowDepFileInConsole{
 			byte[] Sig_Nae_Beleg = Base64.encodeBase64(conDigest1, false);
 			String Sig_Nae_Beleg_String = new String(Sig_Nae_Beleg, "UTF-8");
 			outputstring.append("Sig_Nächster_Beleg_Calculated: " + Sig_Nae_Beleg_String + "\r\n");
-			timer("sig-berech-ende");
 			
 		//	FlagSignatur = depLine;
 			if (!parts4.toString().equals("NOT VALID")) {

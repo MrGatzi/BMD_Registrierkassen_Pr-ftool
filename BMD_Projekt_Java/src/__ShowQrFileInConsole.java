@@ -102,7 +102,7 @@ public class __ShowQrFileInConsole {
 		Runtime runtime = Runtime.getRuntime();
 		Process process = null;
 		StringBuilder outputstring = new StringBuilder();
-		String proString="java -Xmx1500m -jar regkassen-verification-receipts-1.1.0.jar";
+		String proString="java -Xmx1500m -jar regkassen-verification-receipts-1.1.1.jar";
 		if(futurBox==true){
 			proString+=" -f";
 		}
@@ -123,7 +123,7 @@ public class __ShowQrFileInConsole {
 		try {
 			process=runtime.exec(proString);
 		} catch (IOException e2) {
-			System.out.println("Error while calling regkassen-verification-receipts-1.1.0.jar on __ShowQrFileInConsole.java on Line 106");
+			System.out.println("Error while calling regkassen-verification-receipts-1.1.1.jar on __ShowQrFileInConsole.java on Line 106");
 			e2.printStackTrace();
 		}
 		InputStream is = process.getInputStream();

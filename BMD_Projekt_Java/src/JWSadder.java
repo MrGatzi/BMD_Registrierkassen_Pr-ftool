@@ -1,6 +1,8 @@
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.ECDSASigner;
 
+import at.asitplus.regkassen.common.util.CashBoxUtils;
+
 import java.security.interfaces.ECPrivateKey;
 
 public class JWSadder {
