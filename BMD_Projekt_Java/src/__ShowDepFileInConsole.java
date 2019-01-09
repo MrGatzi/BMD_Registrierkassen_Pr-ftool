@@ -65,6 +65,7 @@ public class __ShowDepFileInConsole{
 				indexPrüf = DEP.indexOf("Belege-kompakt", DEP.indexOf("Belege-kompakt") + 1);
 				String[] parts =DEP2.split(",");
 				for (int i = 0; i < parts.length; i++) {
+					
 					parts[i] = parts[i].substring(parts[i].indexOf("\"") + 1);
 					parts[i] = parts[i].substring(0,parts[i].indexOf("\""));
 					String[] parts3 = parts[i].split("[.]");
@@ -264,7 +265,9 @@ public class __ShowDepFileInConsole{
 					outputstring.append("Sig_Nächster_Beleg_Calculated: " + Sig_Nae_Beleg_String + "\r\n");
 					
 					FlagSignatur = parts[i];
-					if (!parts4.toString().equals("NOT VALID")) {
+					
+					String controllString = new String(parts4);
+					if (!controllString.equals("NOT VALID")) {
 						String parts5 = code.base64UrlDecode(parts3[2]);
 						byte[] encodedBytes = Base64.encodeBase64(parts5.getBytes());
 						String PartString1 = new String(encodedBytes, "UTF-8");
