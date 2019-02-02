@@ -622,6 +622,8 @@ public class __MainFrame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			//showDepFileinConsole
+		    
+		
 			Outputarea.setText("Show DEP-File: ");
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);

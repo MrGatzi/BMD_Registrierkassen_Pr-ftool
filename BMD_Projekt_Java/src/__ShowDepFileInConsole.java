@@ -10,6 +10,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.regex.*;  
 
@@ -51,14 +53,17 @@ public class __ShowDepFileInConsole{
 			int wrongCentValue=0;
 			boolean wrongCentValueFlag=false;
 			boolean dateFlag=false;
+			int belegCounter=0;
 			int dateCounter=0;
 			int FlagControll=0;
 			int indexPrüf=0;
 			int forcounter=0;
+			int falseCounter=0;
 			outputstring.append("DEP_FILE:");
 			String DEP = read.Readtxt(show_2);
 			String FlagSignatur="";
-			indexPrüf = DEP.indexOf("Belege-kompakt");			
+			indexPrüf = DEP.indexOf("Belege-kompakt");		
+			HashSet<String> BelegIDSet = new HashSet<String>();
 			while (indexPrüf>-1) {
 				DEP=DEP.substring(indexPrüf, DEP.length());
 				String DEP2 = DEP.substring(DEP.indexOf("["), DEP.indexOf("]"));
@@ -86,7 +91,14 @@ public class __ShowDepFileInConsole{
 							KassenID = parts2[Flag2];
 						}
 						if (Flag2 == 3) {
+							
 							BelegID = parts2[Flag2];
+							if(BelegIDSet.contains(BelegID)) {
+								parts2[Flag2]=parts2[Flag2]+" Fehler!";
+								belegCounter++;
+							}else {
+								BelegIDSet.add(BelegID);
+							}
 						}
 						if(Flag2==4) {
 							dateFlag = Pattern.matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d", parts2[Flag2]);
@@ -272,6 +284,8 @@ public class __ShowDepFileInConsole{
 						byte[] encodedBytes = Base64.encodeBase64(parts5.getBytes());
 						String PartString1 = new String(encodedBytes, "UTF-8");
 						outputstring.append("Signatur: " + PartString1 + "\r\n");
+					}else {
+						falseCounter++;
 					}
 					if(wrongCentValueFlag) {
 						wrongCentValueFlag=false;
@@ -288,6 +302,8 @@ public class __ShowDepFileInConsole{
 			outputstring.append("Berechnete Umsatzzähler: "+ (rightchain+wrongchain) +" , davon richtig verkettet:"+ rightchain +" \r\n");
 			outputstring.append("Belege mit falschen Betragsspalten: "+ wrongCentValue +" (insgesamt falsche Spalten: "+wrongCentValueCounter+" ) \r\n");
 			outputstring.append("Belege mit falschem Datum: "+ dateCounter +" \r\n");
+			outputstring.append("Belege mit falschem Aufbau: "+ falseCounter +" \r\n");
+			outputstring.append("Belege mit falscher BelegID: "+ belegCounter +" \r\n");
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
