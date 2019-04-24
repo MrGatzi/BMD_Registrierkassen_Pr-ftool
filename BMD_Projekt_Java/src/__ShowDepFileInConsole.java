@@ -10,8 +10,12 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.*;  
 
@@ -36,7 +40,7 @@ public class __ShowDepFileInConsole{
 	int flagControllS=0;
 	int elementsUsedS=0;
 	//Ausgabe eines DEP-Files mit genau einem DEP-Export.
-	public String show(String show_2, String show_5,boolean Startbelegflag) {
+	public String show(String show_2, String show_5,boolean Startbelegflag) throws ParseException {
 		StringBuilder outputstring = new StringBuilder();
 		try {
 			DecimalFormat df = new DecimalFormat("#.##");
@@ -55,15 +59,21 @@ public class __ShowDepFileInConsole{
 			boolean dateFlag=false;
 			int belegCounter=0;
 			int dateCounter=0;
+			int wrongDateChainCounter=0;
 			int FlagControll=0;
 			int indexPrüf=0;
 			int forcounter=0;
 			int falseCounter=0;
+			Date currentDate=null;
+			Date oldDate=null;
 			outputstring.append("DEP_FILE:");
 			String DEP = read.Readtxt(show_2);
 			String FlagSignatur="";
 			indexPrüf = DEP.indexOf("Belege-kompakt");		
 			HashSet<String> BelegIDSet = new HashSet<String>();
+			List<String> wrongDatesBelegNr = new ArrayList<String>();
+			List<String> wrongFormatDatesBelegNr = new ArrayList<String>();
+			boolean errorBlockerCauseSTOorTRA=Startbelegflag;
 			while (indexPrüf>-1) {
 				DEP=DEP.substring(indexPrüf, DEP.length());
 				String DEP2 = DEP.substring(DEP.indexOf("["), DEP.indexOf("]"));
@@ -102,6 +112,10 @@ public class __ShowDepFileInConsole{
 						}
 						if(Flag2==4) {
 							dateFlag = Pattern.matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d", parts2[Flag2]);
+							if(dateFlag) {
+								String currentDateString = parts2[Flag2].replace('T', ' ');
+								currentDate=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(currentDateString);  
+							}
 							
 						}
 						if (Flag2 == 5) {
@@ -184,15 +198,16 @@ public class __ShowDepFileInConsole{
 								outputstring.append(QR_Code_Titels[Flag2] + "  " + dflag + " €   \r\n");
 								umsatzählerSoll=umsatzählerAlt+umsatzähler1+umsatzähler2+umsatzähler3+umsatzähler4+umsatzähler5;
 								umsatzählerAlt=umsatzählerSoll;
-								
 								if(d==umsatzählerSoll){
 									rightchain++;
 									outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: " + (umsatzählerSoll/100) + " €\r\n");
+									
 								}else{
-									if(forcounter == 0 && Startbelegflag){
+									if((forcounter == 0 && Startbelegflag)||errorBlockerCauseSTOorTRA){
 										rightchain++;
 										umsatzählerAlt=d;
 										outputstring.append("Stand-Umsatz-Zaehler_Sollsumme: " + dflag + " €\r\n");
+										errorBlockerCauseSTOorTRA=false;
 									}else{
 										wrongchain++;
 										umsatzählerAlt=d;
@@ -295,15 +310,44 @@ public class __ShowDepFileInConsole{
 					if(!dateFlag) {
 						outputstring.append("Datum: FEHLER\r\n");
 						dateCounter++;
+						wrongFormatDatesBelegNr.add(parts2[3]);
+					}else {
+						if(oldDate!=null) {
+							if(currentDate.compareTo(oldDate)<0) {
+								wrongDateChainCounter++;
+								outputstring.append("Datumverkettung: FEHLER\r\n");
+								wrongDatesBelegNr.add(parts2[3]);
+								oldDate=currentDate;
+							}else {
+								oldDate=currentDate;
+							}
+						}else{
+							oldDate=currentDate;
+						}
 					}
 				}
 			}
 			outputstring.append("\r\nListen Elemente: "+ forcounter +" , davon richtig verkettet:"+ FlagControll +" \r\n");
 			outputstring.append("Berechnete Umsatzzähler: "+ (rightchain+wrongchain) +" , davon richtig verkettet:"+ rightchain +" \r\n");
 			outputstring.append("Belege mit falschen Betragsspalten: "+ wrongCentValue +" (insgesamt falsche Spalten: "+wrongCentValueCounter+" ) \r\n");
-			outputstring.append("Belege mit falschem Datum: "+ dateCounter +" \r\n");
 			outputstring.append("Belege mit falschem Aufbau: "+ falseCounter +" \r\n");
 			outputstring.append("Belege mit falscher BelegID: "+ belegCounter +" \r\n");
+			outputstring.append("Belege mit falschem Datum: "+ dateCounter +" \r\n");
+			if(wrongFormatDatesBelegNr.size()>0) {
+				outputstring.append("Folgende Belege sind betroffen : ");
+				for(String BelegNr:wrongFormatDatesBelegNr){
+					outputstring.append(BelegNr+"  ");
+				}
+				outputstring.append("\r\n");
+			}
+			outputstring.append("Belege mit falscher Datumsverkettung: "+ wrongDateChainCounter +" \r\n");
+			if(wrongDatesBelegNr.size()>0) {
+				outputstring.append("Folgende Belege sind betroffen : ");
+				for(String BelegNr:wrongDatesBelegNr){
+					outputstring.append(BelegNr+"  ");
+				}
+				outputstring.append("\r\n");
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

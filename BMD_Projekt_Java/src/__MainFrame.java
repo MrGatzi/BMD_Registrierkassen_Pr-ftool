@@ -33,6 +33,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.crypto.Cipher;
@@ -628,7 +629,13 @@ public class __MainFrame extends JFrame {
 			Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 			setCursor(hourglassCursor);
 			
-			String outputDepFile =DepFunction.show(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString(),StartvalueCheckboxDEP.isSelected());
+			String outputDepFile="";
+			try {
+				outputDepFile = DepFunction.show(DEP_selectedFolder.getSelectedItem().toString(), Crypto_selectedFolder.getSelectedItem().toString(),StartvalueCheckboxDEP.isSelected());
+			} catch (ParseException e) {
+				outputDepFile="Error while Parsing Date!";
+				e.printStackTrace();
+			}
 			//int count =  // commons-lang3-3.6.jar in /lib
 			Outputarea.setRows((StringUtils.countMatches(outputDepFile, "\r\n")+10));
 			Outputarea.setText(outputDepFile);
